@@ -1,0 +1,43 @@
+/*
+ * @author Polyakov Konstantin
+ * @created_date 10.02.2017
+*/
+
+[class~="an_scaling09"]:hover {
+	transform: scale(0.9);
+    transition: all 0.3s ease;
+}
+[class~="an_scaling11"]:hover {
+	transform: scale(1.1);
+    transition: all 0.3s ease;
+}
+
+/* Parallax base styles
+--------------------------------------------- */
+* {
+   margin: 0;
+   padding:0;
+}
+/*
+   <div class="parallax">
+       <div class="parallax__layer parallax__layer--back">
+           This is the background
+       </div>
+       <div class="parallax__layer parallax__layer--base">
+           This is the foreground
+       </div>
+   </div>
+*/
+.parallax {
+    height: 100vh;
+    overflow-x: hidden;
+    perspective: 1px;
+}
+.parallax__layer {
+    position: absolute;
+    padding: 100vh 0; /* add some padding to force scrollbars */
+}
+.parallax__layer--back {
+    transform: translateZ(-1px);
+}
+/*--------------------------------------------- */

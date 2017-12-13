@@ -18,6 +18,8 @@ $clsFilter = new FilterData();
 
 if (!defined('WB_URL')) require(__DIR__.'/../../config.php'); // для инициализации сессии
 
+include(WB_PATH.'/modules/wbs_core/include.php');
+
 if (!defined('SQL_TOOLS_MODULE_LOADED')) include(WB_PATH.'/modules/wbs_core/core/functions.sql_tools.php');
 if (!class_exists('FilterData')) include(WB_PATH.'/modules/wbs_core/core/class.filter_data.php');
 if (!class_exists('Addon')) include(WB_PATH.'/modules/wbs_core/core/class.wb_module.php');

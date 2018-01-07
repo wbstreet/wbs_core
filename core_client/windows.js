@@ -59,6 +59,7 @@ function Window() {
         var self = this;
     this.count_open = {}; // количество открытых одинаковых окон
     this.count_open_total = 0 // всего открытых окон
+    this.close_direction = 'left';
 
     var _w = document.createElement('div'); _w.className = 'windowWindow'; _w.id = 'windowWindow';
     _w.innerHTML = 
@@ -239,12 +240,12 @@ function Window() {
     }
 
     this.close = function(child_el) {
-            w = self.get_w(child_el);
+        w = self.get_w(child_el);
 
-            self.count_open[self.get_wbody(w).id] -= 1;
-            self.count_open_total -= 1;
+        self.count_open[self.get_wbody(w).id] -= 1;
+        self.count_open_total -= 1;
 
-            self.del_data(w);
+        self.del_data(w);
 
         var sheet = document.getElementById(w.id + '_sheet');
         if (sheet) {
@@ -255,15 +256,25 @@ function Window() {
             }, 400);
         }
 
+        //if (self.close_direction == 'left') {
             w.style.transition = 'left 0.5s';
             w.style.left = '-1000px';
+            self.close_direction = 'right';
+        //} else if (self.close_direction == 'right') {
+         //   w.style.right = String((parseInt(screen.width) - parseInt(getComputedStyle(w).width))/2) + 'px';
+          //  w.style.left = 'auto';
+        //    w.style.transition = 'right 0.5s';
+         //   w.style.right = '-1000px';
+         //   self.close_direction = 'left';
+        //}
+        
         setTimeout(function() {
-                    if (self.zi) self.zi.remove(w);
-                w.remove();
+            if (self.zi) self.zi.remove(w);
+            w.remove();
         },500);
     };
 
-        this.show = function(w) {
+     this.show = function(w) {
             w.style.display = "block";
         self.get_wbody(w).style.display = "block";
         };

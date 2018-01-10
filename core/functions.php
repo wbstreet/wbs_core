@@ -8,9 +8,9 @@ define('CUSTOM_FUNCTIONS_LOADED', true);
 function echo_creator($link_style='', $image_style='', $sign_style='') {
         ?>
 
-    <a style='border: 1px solid #fff;padding:12px;<?=$link_style?>' target="_blank" href="http://вашсайт.инфо-рф.рф">
+    <a style='border: 1px solid #fff;padding:12px;<?=$link_style?>' target="_blank" href="https://vk.com/id275575214">
             <nobr>
-                        <img style='<?=$image_style?>' height="30px" src="https://инфо-рф.рф/media/img/informer.png">
+                        <img style='<?=$image_style?>' height="30px" src="https://pp.userapi.com/c639418/v639418616/5ba06/6JVBrCdTehI.jpg">
                         <span style='<?=$sign_style?>'>&nbsp;&nbsp;Дизайн и разработка</span>
                 </nobr>
         </a>

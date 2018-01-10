@@ -29,4 +29,7 @@ if (!class_exists('WbsEmail')) include(WB_PATH.'/modules/wbs_core/core/class.ema
 
 $clsAgreemnt = new Agreement($database);
 $clsFilter = new FilterData();
-$clsEmail = new WbsEmail();
+
+if (!class_exists('wb')) include(WB_PATH.'/framework/class.wb.php');
+if (!isset($wb) || !($wb instanceof wb)) { $wb = new wb(); }
+$clsEmail = new WbsEmail($wb);

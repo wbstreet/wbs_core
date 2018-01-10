@@ -38,10 +38,26 @@ class WbsEmail {
 		    if(!$mail->Send()) {
 		    	return 'Ошибка отправки письма! Пожалуйста, обратитесь в службу поддержки. '.$mail->ErrorInfo;
 		    }*/
-		    
-		    if (!mail($to, $subject, $body)){
+
+                    $r = $this->wb->mail(
+                            $sFromAddress=$to,
+                            $toAddress=$to,
+                            $sSubject=$subject,
+                            $sMessage=$body,
+                            $sFromname='',
+                            $toName='',
+                            $sReplyToAddress=$to,
+                            $sReplyToName='',
+                            $sMessagePath='',
+                            $aAttachment=null
+                            );
+                    if (!r) {
                         return 'Ошибка отправки письма! Пожалуйста, обратитесь в службу поддержки.';
                     }
+		    
+		    //if (!mail($to, $subject, $body)){
+                    //    return 'Ошибка отправки письма! Пожалуйста, обратитесь в службу поддержки.';
+                    //}
 		
 		    return true;
 	}

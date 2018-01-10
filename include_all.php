@@ -25,6 +25,8 @@ if (!class_exists('FilterData')) include(WB_PATH.'/modules/wbs_core/core/class.f
 if (!class_exists('Addon')) include(WB_PATH.'/modules/wbs_core/core/class.wb_module.php');
 if (!defined('CUSTOM_FUNCTIONS_LOADED')) include(WB_PATH.'/modules/wbs_core/core/functions.php');
 if (!class_exists('Agreement')) include(WB_PATH.'/modules/wbs_core/core/class.agreement.php');
+if (!class_exists('WbsEmail')) include(WB_PATH.'/modules/wbs_core/core/class.email.php');
 
 $clsAgreemnt = new Agreement($database);
 $clsFilter = new FilterData();
+$clsEmail = new WbsEmail();

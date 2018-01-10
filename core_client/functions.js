@@ -6,7 +6,7 @@ You can use this code for everything! But be very carefull :)
 */
 
 function Request(method, url, post, async_func) {
-	if (url === undefined) url = WB_URL+'/api.php'; 
+	if (url === undefined) url = WB_URL+'/modules/wbs_core/api.php'; 
 
 	post = post || '';
 	async_func = async_func || null;

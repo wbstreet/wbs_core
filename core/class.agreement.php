@@ -41,7 +41,7 @@ class Agreement {
 		
 	}
 	
-	function does_visitor_agree($field_name='i_agree', $true_value='on', $object=null) {
+	function does_visitor_agree($field_name='i_agree', $true_value='true', $object=null) {
 		if ($object == null) $object = $_POST;
 
 		if (gettype($object) == 'object') {

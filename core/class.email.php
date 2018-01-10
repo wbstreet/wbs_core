@@ -117,28 +117,34 @@ class WbsEmail {
     }
 
 
-    function send($to, $body, $subject, $template_id=0) {
-        // сохраняем копию письма
-       	$admin = new admin('Start', '', false, false);
-       	if ($admin->is_authenticated()) $sender_user_id = $admin->get_user_id();
-       	else $sender_user_id = null;
-       	// константу PAGE_ID необходимо объявлять вручную из API.php
-       	if (defined('PAGE_ID')) $send_from_page_id = PAGE_ID;
-       	else $send_from_page_id = null;
-        $backuped_letter_id = $this->backup_letter($to, $body, $subject, $template_id, $sender_user_id, $send_from_page_id);
-        if (gettype($backuped_letter_id) == 'string') return $backuped_letter_id;
+    function send($to, $body, $subject, $template_id=0, $save_backup=true) {
+        if ($save_backup) {
+            // сохраняем копию письма
+            $admin = new admin('Start', '', false, false);
+       	    if ($admin->is_authenticated()) $sender_user_id = $admin->get_user_id();
+       	    else $sender_user_id = null;
+       	    // константу PAGE_ID необходимо объявлять вручную из API.php
+       	    if (defined('PAGE_ID')) $send_from_page_id = PAGE_ID;
+       	    else $send_from_page_id = null;
+            $backuped_letter_id = $this->backup_letter($to, $body, $subject, $template_id, $sender_user_id, $send_from_page_id);
+            if (gettype($backuped_letter_id) == 'string') return $backuped_letter_id;
 
-        // отправляем письмо
-	$r = $this->_send($to, $body, $subject);
-	if ($r !== true) return $r;
+            // отправляем письмо
+	    $r = $this->_send($to, $body, $subject);
+	    if ($r !== true) return $r;
 
-        // помечаем копию как отправленная
-	$r = $this->backup_is_sended($backuped_letter_id);
+            // помечаем копию как отправленная
+	    $r = $this->backup_is_sended($backuped_letter_id);
+	 } else {
+            // отправляем письмо
+            $r = $this->_send($to, $body, $subject);
+            $backuped_letter_id = null;
+	 }
 
 	return [$r, $backuped_letter_id];
     }
 	
-    function send_template($to, $template_name, $vars) {
+    function send_template($to, $template_name, $vars, $save_backup=true) {
         $r = $this->get_templates(['letter_name'=>$template_name]);
 	if (gettype($r) === 'string') return $r;
 	if ($r === null) return 'Шаблон письма не найден';
@@ -151,7 +157,7 @@ class WbsEmail {
 	$body = str_replace(array_keys($_vars), array_values($_vars), $r['letter_template_body']);
 
         // отправляем письмо
-	return $this->send($to, $body, $r['letter_template_subject'], $r['letter_template_id']);
+	return $this->send($to, $body, $r['letter_template_subject'], $r['letter_template_id'], $save_backup);
     }
 	
 }

@@ -50,7 +50,7 @@ function RA_raw(action, data, options) {
 	        if (res['success'] == 1) {
 	        	if (options['func_success']) options['func_success'](res, options['arg_func_success']);
 	        } else {
-	        	if (options['func_error']) options['func_error'](res);
+	        	if (options['func_error']) options['func_error'](res, options['arg_func_error']);
 	        }
 	    } else if (!navigator.onLine) {
         	if (options['func_fatal']) options['func_fatal']('Нет соединения с Интернет');
@@ -166,6 +166,7 @@ function RA_ButtonProgress(action, data, button, sending_text, func_success, opt
         	show_button_message(button, 'ошибка: '+res['message']);
         	animate_element(button, 'btn-err')
         	if (res['absent_fields'] !== undefined) light_absent_fields(button.form, res['absent_fields']);
+                if (options['func_error']) options['func_error'](res, options['arg_func_error']);
     	},
     	func_fatal: function(res) {
         	show_button_message(button, 'неизвестная ошибка(');

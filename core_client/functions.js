@@ -57,64 +57,10 @@ function RA_raw(action, data, options) {
         } else {
         	if (options['func_fatal']) options['func_fatal']('Неизветсная ошибка');
         }
-        // повторяется в admin/cabinet/tab_page/index.js
         if (window.grecaptcha && data['grecaptcha_widget_id']) grecaptcha.reset(data['grecaptcha_widget_id']); // сбрасываем капчу гугла
-	})
+        if (options['wb_captcha_img']) wb_captcha_reload(options['wb_captcha_img']); // сбрасываем капчу websitebaker
+        })
 }
-
-/*function Request(method, url, post, async_func) {
-	post = post || '';
-	async_func = async_func || null;
-
-	if (async_func === null) {var is_async = false;} else {var is_async = true;}
-	
-    var req = new XMLHttpRequest();
-    req.open(method, url, is_async);
-    req.send(post);
-
-    if (is_async) {req.onreadystatechange = async_func;}
-    return req;
-}
-
-function RequestAction(action_name, arr, async_func) {
-	async_func = async_func || null;
-    var form = new FormData();
-    form.append('action', action_name);
-    for (var name in arr) {
-        if (!arr.hasOwnProperty(name)) {continue;}
-        if (arr[name] instanceof FileList || arr[name] instanceof Array) {
-            for(var i=0; i < arr[name].length; i++) form.append(name, arr[name][i]);
-        }else {form.append(name, arr[name]);}
-    }
-
-    return Request('post', WB_URL+'/api.php', form, async_func)
-}
-
-function del_casper(text) {
-	// удаляем касперского, а адекватное другое решение позже реализую
-	return text.replace(/<script type="text\/javascript" src="http:\/\/gc\.kis\.v2\.scr\.kaspersky-labs\.com\/[-A-Z0-9]+\/main\.js" charset="UTF-8"><\/script>/, '');
-}
-
-function RA_raw(action, data, options) {
-	RequestAction(action, data, function() {
-		if (this.readyState != 4) return;
-        if (this.status==200) {
-	        var res = JSON.parse(del_casper(this.responseText));
-        	if (options['func_after_load']) options['func_after_load'](res);
-	        if (res['success'] == 1) {
-	        	if (options['func_success']) options['func_success'](res);
-	        } else {
-	        	if (options['func_error']) options['func_error'](res);
-	        }
-	    } else if (!navigator.onLine) {
-        	if (options['func_fatal']) options['func_fatal']('Нет соединения с Интернет');
-        } else {
-        	if (options['func_fatal']) options['func_fatal']('Неизветсная ошибка');
-        }
-        // повторяется в admin/cabinet/tab_page/index.js
-        if (window.grecaptcha && data['grecaptcha_widget_id']) grecaptcha.reset(data['grecaptcha_widget_id']); // сбрасываем капчу гугла
-	})
-}*/
 
 function show_button_message(button, message, timeout) {
 	var process;
@@ -172,7 +118,8 @@ function RA_ButtonProgress(action, data, button, sending_text, func_success, opt
         	show_button_message(button, 'неизвестная ошибка(');
     	},
     	url: options['url'],
-    	func_after: options['func_after']
+    	func_after: options['func_after'],
+        wb_captcha_img: options['wb_captcha_img']
     })
 }
 
@@ -215,7 +162,8 @@ function RA_Notification(action, data, func_success, options) {
         	showNotification('неизвестная ошибка(', 'error');
     	},
     	url: options['url'],
-    	func_after: options['func_after']
+    	func_after: options['func_after'],
+        wb_captcha_img: options['wb_captcha_img']
     })
 }
 
@@ -1208,4 +1156,10 @@ function content_by_api(api, tag, options) {
     	},
     	url: options['url']
     });
+}
+
+function wb_captcha_reload(img){
+    let a = document.createElement('a');
+    a.href = img.src;
+    img.src = set_time_mark(a.protocol + '//' + a.hostname + a.pathname);
 }

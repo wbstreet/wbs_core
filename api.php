@@ -25,18 +25,10 @@ if ($action=='get_agreement') {
     foreach($arrFields as $lat_name => $rus_name) {
         $clsFilter->f($lat_name, [['1', "Введите $rus_name!"]], 'append');
     }
-    $clsFilter->f('captcha', [['1', "Введите Защитный код!"]], 'append');
+    $clsFilter->f('captcha', [['1', "Введите Защитный код!"], ['variants', "Введите Защитный код!", [$_SESSION['captcha']]]], 'append', '');
+    $clsFilter->f('i_agree', [['variants', "Вы должны согласитиься с пользовательским соглашением!", ['true']]], 'append', '');
     if ($clsFilter->is_error()) $clsFilter->print_error();
 
-    // проверка согласия пользователя
-    if (!isset($clsAgreemnt) || !$clsAgreemnt->does_visitor_agree()) {
-        print_error("Вам необходимо согласиться с соглашением! ");
-    }
-
-    // проверка капчи
-    if (!isset($_SESSION['captcha']) || !isset($_POST['captcha']) || (string)$_SESSION['captcha'] != (string)$_POST['captcha']) {
-        print_error("Капча введена неверно! Повторите попытку. ");
-    }
     // TODO здесь нужно изменить капчу
 
     // Определяем сайт

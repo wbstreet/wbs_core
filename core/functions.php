@@ -99,4 +99,16 @@ function endsWith($haystack, $needle) {
    return (substr($haystack, -$length) === $needle);
 }
 
+function idn_decode($url) {
+    $class_path = WB_PATH.'/include/idna_convert/idna_convert.class.php';
+    if (!class_exists('idna_convert')) {
+        if (file_exists($class_path)) require_once($class_path);
+    }
+    if (class_exists('idna_convert')) {
+        $IDN = new idna_convert();
+        return [$IDN->decode(WB_URL), true];
+    }
+    return [$url, false];
+}
+
 ?>

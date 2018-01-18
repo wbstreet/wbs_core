@@ -37,6 +37,7 @@ if ($action=='get_agreement') {
     if (!isset($_SESSION['captcha']) || !isset($_POST['captcha']) || (string)$_SESSION['captcha'] != (string)$_POST['captcha']) {
         print_error("Капча введена неверно! Повторите попытку. ");
     }
+    //TODO здесь нужно изменить капчу
 
     // Определяем сайт
     if (file_exists(__DIR__.'/include/idna_convert/idna_convert.class.php')) require_once(__DIR__.'/include/idna_convert/idna_convert.class.php');

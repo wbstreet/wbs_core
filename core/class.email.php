@@ -2,8 +2,8 @@
 
 class WbsEmail {
 	function __construct() {
-		$this->tbl_templates_of_letter = "`".TABLE_PREFIX."mod_wbscore_templates_of_letter`";
-		$this->tbl_templates_of_letter_sended = "`".TABLE_PREFIX."mod_wbscore_templates_of_letter_sended`";
+		$this->tbl_templates_of_letter = "`".TABLE_PREFIX."mod_wbs_core_templates_of_letter`";
+		$this->tbl_templates_of_letter_sended = "`".TABLE_PREFIX."mod_wbs_core_templates_of_letter_sended`";
 	}
 	
 	protected function _send($to, $body, $subject) {

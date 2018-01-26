@@ -2,16 +2,16 @@
 -- class.email.php
 --
 
-DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbscore_templates_of_letter`;
-CREATE TABLE `{TABLE_PREFIX}mod_wbscore_templates_of_letter` (
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_templates_of_letter`;
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_templates_of_letter` (
   `letter_template_id` int(11) NOT NULL,
   `letter_template_name` varchar(100) NOT NULL,
   `letter_template_body` text NOT NULL,
   `letter_template_subject` varchar(255) NOT NULL DEFAULT ''
 ){TABLE_ENGINE=MyISAM}; 
 
-DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbscore_templates_of_letter_sended`;
-CREATE TABLE `{TABLE_PREFIX}mod_wbscore_templates_of_letter_sended` (
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_templates_of_letter_sended`;
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_templates_of_letter_sended` (
   `sended_letter_id` int(11) NOT NULL,
   `letter_body` text NOT NULL,
   `letter_subject` varchar(255) NOT NULL,

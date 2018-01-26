@@ -32,13 +32,14 @@
 define('SQL_TOOLS_MODULE_LOADED', true);
 
 function process_value($value, $type_value='string') {
+        global $database;
 	if (gettype($value) == 'array') {
 		$type_value = isset($value['type']) ? $value['type'] : 'string';
 		$value = isset($value['value']) ? $value['value'] : null;
 	}
 	
 	if ($type_value === 'string') {
-		if (gettype($value) == 'string') return '"'.mysql_escape_string($value).'"';
+		if (gettype($value) == 'string') return '"'.$database->escapeString($value).'"';
 		else if ($value === null) return 'NULL';
 		else return '"'.$value.'"'; // numbers (float or integer)
 	} else if ($type_value == 'function') {
@@ -53,12 +54,12 @@ function process_key($key) {
 }
 
 function process_table($arrTable) {
-	if (gettype($arrTable)=='string')  return $arrTable;
+    if (gettype($arrTable)=='string')  return $arrTable;
 
     $arrTable['name'] = process_key($arrTable['name']);
 	
-	if (isset($arrTable['alias'])) return $arrTable['name']." AS ".$arrTable['alias'];
-	return $arrTable['name'];
+    if (isset($arrTable['alias'])) return $arrTable['name']." AS ".$arrTable['alias'];
+    return $arrTable['name'];
 
 }
 
@@ -69,9 +70,8 @@ function process_tables($arrTables) {
 }
 
 function process_where($where) {
-	//if (gettype($where) == 'string') return "WHERE ".$where;
-	//if (gettype($where) == 'integer') return "WHERE ".$where;
-	return $where;
+    if ($where === null || $where === '') $where = "1=1";
+    return $where;
 
 }
 
@@ -101,14 +101,15 @@ function glue_values($values) {
 }
 
 /** 
- * @param arra $fields ['key1'=>value1', 'key2'=>'value2', 'key3'=>'value3']
+ * @param arra $fields ['key1'=>value1', 'key2'=>['value2', 'value4'], 'key3'=>'value3']
  */
-function glue_fields($fields, $sep) {
+function glue_fields($fields, $sep, $sep2='=') {
     $_fields = array();
     foreach ($fields as $key => $value) {
-    	$value = process_value($value);
+        if (gettype($value) == 'array') $value = "(".glue_value($value).")";
+    	else $value = process_value($value);
     	$key = process_key($key);
-        $_fields[] = $key.'='.$value;
+        $_fields[] = $key.' '.$sep2.' '.$value;
     }
     return implode($sep, $_fields);
 }
@@ -128,40 +129,13 @@ function glue_condition($condition) {
 }
 
 // не рекомендавана. Используйте glue_keys(array_keys($fields)) и glue_values(array_values($fields))
-/**
- * @param @fields array ['key1'=>'value1']
- */
-function prepare2insert($fields) {
-    $forinsert = [];
-    $forinsert['keys'] = glue_keys(array_keys($fields));
-    $forinsert['values'] = glue_values(array_values($fields));
-    /*$forinsert = ['keys'=>[], 'values'=>[]];
-    foreach ($fields as $key => $value) {
-        $forinsert['keys'][] = process_key($key);
-        $forinsert['values'][] = process_value($value);
-    }
-    $forinsert['keys'] = implode(',', $forinsert['keys']); $forinsert['values'] = implode(',', $forinsert['values']);*/
-    return $forinsert;
-}
+//function prepare2insert($fields) {
 
 // не рекомендавана. Используйте glue_fields($fields, ',')
-function prepare2update($fields) {
-    $forupdate = array();
-    foreach ($fields as $key => $value) {
-    	$value = process_value($value);
-        $forupdate[] = '`'.$key.'`='.$value;
-    }
-    return implode(',', $forupdate);
-}
+//function prepare2update($fields) {
+
 // не рекомендавана. Используйте glue_fields($fields, ' AND ')
-function prepare2select($fields) {
-    $forselect = array();
-    foreach ($fields as $key => $value) {
-    	$value = process_value($value);
-        $forselect[] = '`'.$key.'`='.$value;
-    }
-    return implode(' AND ', $forselect);
-}
+//function prepare2select($fields) {
 
 /* ----------- Промежуточный уровень: построение запроса ----------- */ 
 
@@ -186,12 +160,11 @@ function build_limit($offset=null, $count=null) {
 }
 
 function build_update($table, $fields, $where=null) {
-	$fields = glue_fields($fields, ',');
-	$table = process_tables($table);
+    $fields = glue_fields($fields, ',');
+    $table = process_tables($table);
     $where = process_where($where);
-	$sql = "UPDATE $table SET $fields ";
-	if ($where !== null) $sql = $sql."WHERE $where";
-	return $sql;
+    $sql = "UPDATE $table SET $fields WHERE $where";
+    return $sql;
 }
 
 /**
@@ -199,21 +172,19 @@ function build_update($table, $fields, $where=null) {
  * @param mixed $keys Array of field names or raw string
  */
 function build_select($table, $keys, $where=null) {
-	if (gettype($keys) == 'array') $keys = glue_keys($keys);
-	$table = process_tables($table);
+    if (gettype($keys) == 'array') $keys = glue_keys($keys);
+    $table = process_tables($table);
     $where = process_where($where);
-	$sql = "SELECT $keys FROM $table ";
-	if ($where !== null) $sql = $sql."WHERE $where";
-	return $sql;
+    $sql = "SELECT $keys FROM $table WHERE $where";
+    return $sql;
     
 }
 
 function build_delete($table, $where=null) {
-	$table = process_tables($table);
+    $table = process_tables($table);
     $where = process_where($where);
-	$sql = "DELETE FROM $table ";
-	if ($where !== null) $sql = $sql."WHERE $where";
-	return $sql;
+    $sql = "DELETE FROM $table WHERE $where";
+    return $sql;
 }
 
 /** Variant 1:
@@ -247,11 +218,29 @@ function check_update($sql) {
 	global $database;
 
 	if ($database->query($sql)) return true;
-	if ($database->is_error()) return "update_row() '$sql' :: ".$database->get_error();
+	//if ($database->is_error()) return "update_row() '$sql' :: ".$database->get_error();
+	if ($database->is_error()) error_log("update_row() '$sql' :: ".$database->get_error());
+
 	return false;
 }
-function check_insert($sql) { return check_update($sql); }
-function check_delete($sql) { return check_update($sql); }
+function check_insert($sql) { 
+        global $database;
+
+        if ($database->query($sql)) return true;
+        //if ($database->is_error()) return "update_row() '$sql' :: ".$database->get_error();
+        if ($database->is_error()) error_log("insert_row() '$sql' :: ".$database->get_error());
+
+        return false;
+}
+function check_delete($sql) {
+        global $database;
+
+        if ($database->query($sql)) return true;
+        //if ($database->is_error()) return "update_row() '$sql' :: ".$database->get_error();
+        if ($database->is_error()) error_log("delete_row() '$sql' :: ".$database->get_error());
+
+        return false;
+}
 
 /**
  * 
@@ -260,7 +249,8 @@ function check_select($sql) {
 	global $database;
 
 	$r = $database->query($sql);
-	if ($database->is_error()) return "select_rows() '$sql' :: ".$database->get_error();
+	//if ($database->is_error()) return "select_rows() '$sql' :: ".$database->get_error();
+	if ($database->is_error()) { error_log("select_rows() '$sql' :: ".$database->get_error()); return false; }
 	if ($r->numRows() == 0) return null;
 	return $r;
 }
@@ -268,27 +258,29 @@ function check_select($sql) {
 /* ----------- Высший уровень: строим, делаем запрос, проверяем результат ----------- */ 
 
 function update_row($table, $fields, $where=null) {
-	global $database;
-	$sql = build_update($table, $fields, $where);
+    global $database;
+    $sql = build_update($table, $fields, $where);
     return check_update($sql);
 }
 
 function delete_row($table, $where=null) {
-	global $database;
-	$sql = build_delete($table, $where);
-    return check_update($sql);
+    global $database;
+    $sql = build_delete($table, $where);
+    return check_delete($sql);
 }
 
-function select_rows($table, $keys, $where='') {
-	global $database;
-	$sql = build_select($table, $keys, $where);
+function select_rows($table, $keys, $where=null) {
+    global $database;
+    $sql = build_select($table, $keys, $where);
     return check_select($sql);
 }
+function select_row($table, $keys, $where=null) { return select_rows($table, $keys, $where); }
 
 function insert_rows($table, $fields, $value_lines=false) {
-	global $database;
-	$sql = build_insert($table, $fields, $value_lines);
+    global $database;
+    $sql = build_insert($table, $fields, $value_lines);
     return check_insert($sql);
 }
+function insert_row($table, $fields, $value_lines=false) { return insert_rows($table, $fields, $value_lines); }
 
 ?>

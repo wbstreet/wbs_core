@@ -18,6 +18,13 @@ class Addon {
     function getUrlAction($action) {
         return WB_URL."/modules/{$this->name}/save.php?action={$action}&section_id={$this->section_id}&page_id={$this->page_id}";
     }
+
+    function print_error($message, $options=[]) {
+        if (!isset($options['format'])) $options['format'] = 'js';
+        $message = "Модуль: {$this->name}; page_id: {$this->page_id}; section_id: {$this->section_id}\n".$message;
+        print_error(htmlentities($message, ENT_QUOTES), $options);
+    }
+    
 }
 
 ?>

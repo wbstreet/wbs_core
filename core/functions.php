@@ -59,31 +59,32 @@ function diverse_array($vector) {
    печатают сообщения (уведомительные или ошибки). Для работы функций требуется создать пустой массив $res
 */
 function print_message($message, $options, $type) {
-        global $admin;
+    global $admin;
     if (!isset($options['return_url'])) $options['return_url'] = 'index.php';
     if (!isset($options['data'])) $options['data'] = [];
     $format =  isset($options['format']) ? $options['format'] : 'json';
-        if ($format == 'html') {
-                $admin->print_header();
-                if ($type == 'error') $admin->print_error($message, $options['return_url']);
-                else if ($type == 'success') $admin->print_success($message, $options['return_url']);
-                die;
-        } else if ($format == 'json') {
-                $res = [];
-                if ($type == 'error') $res['success'] = '0';
-                else if ($type == 'success') $res['success'] = '1';
-                $res['message'] = $message;
-                if (isset($options['data']))          $res['data'] = $options['data'];
-                if (isset($options['absent_fields'])) $res['absent_fields'] = $options['absent_fields'];
-                if (isset($options['timeout']))       $res['timeout'] = $options['timeout'];
-                if (isset($options['location']))      $res['location'] = $options['location'];
-                if (isset($options['title']))          $res['title'] = $options['title'];
-                echo json_encode($res);
-                die();
-        }
+    if ($format == 'html') {
+        $admin->print_header();
+        if ($type == 'error') $admin->print_error($message, $options['return_url']);
+        else if ($type == 'success') $admin->print_success($message, $options['return_url']);
+        die;
+    } else if ($format == 'json') {
+        $res = [];
+        if ($type == 'error') $res['success'] = '0';
+        else if ($type == 'success') $res['success'] = '1';
+        $res['message'] = $message;
+        if (isset($options['data']))          $res['data'] = $options['data'];
+        if (isset($options['absent_fields'])) $res['absent_fields'] = $options['absent_fields'];
+        if (isset($options['timeout']))       $res['timeout'] = $options['timeout'];
+        if (isset($options['location']))      $res['location'] = $options['location'];
+        if (isset($options['title']))          $res['title'] = $options['title'];
+        echo json_encode($res);
+        die();
+    } else if ($format=='js') {
+        echo "<script>console.log(`{$message}`);</script>";
+    }
 }
-function print_error($message, $options=[]) { print_message($message, $options, 'error');
-}
+function print_error($message, $options=[]) { print_message($message, $options, 'error'); }
 function print_success($message, $options=[]) { print_message($message, $options, 'success'); }
 
 // http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php

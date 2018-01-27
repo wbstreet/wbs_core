@@ -1158,8 +1158,32 @@ function content_by_api(api, tag, options) {
     });
 }
 
-function wb_captcha_reload(img){
-    let a = document.createElement('a');
-    a.href = img.src;
-    img.src = set_time_mark(a.protocol + '//' + a.hostname + a.pathname);
+function set_params(params, options) {
+    if (options === undefined) options = [];
+    if (options.reload === undefined) options.reload = true;
+    if (options.search === undefined) options.search = location.search;
+    if (options.url === undefined) options.url = location.protocol +'//'+ location.host + location.pathname;
+        
+    let search = new URLSearchParams(options.search);
+    for (let param in params) {
+        if (!params.hasOwnProperty(param)) continue;
+        search.set(param, params[param]);
+    }
+    
+    if (options.reload) {
+        //window.location.search = search.toString();
+        window.location.href = options.url +'?'+ search.toString();
+    } else {
+        return search.toString();
+    }
+}
+
+function wb_captcha_reload(img){
+
+    let a = document.createElement('a');
+
+    a.href = img.src;
+
+    img.src = set_time_mark(a.protocol + '//' + a.hostname + a.pathname);
+
 }

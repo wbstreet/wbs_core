@@ -112,4 +112,28 @@ function idn_decode($url) {
     return [$url, false];
 }
 
+/* Проверка прав  */
+
+function check_permission($rules) {
+    global $admin;
+    foreach ($rules as $i => $rule) {
+        if (!$admin->get_permission($rule)) print_error('Нет доступа');
+    }
+}
+
+function check_page_permission($page_id) {
+    global $admin;
+    if (!$admin->get_page_permission($page_id)) print_error('Нет доступа к странице');
+}
+
+function check_all_permission($page_id, $rules) {
+    check_page_permission($page_id);
+    check_permission($rules);
+}
+
+function check_auth() {
+    global $admin;
+    if (!$admin->is_authenticated()) print_error('Доступ разрешён только зарегистрированным пользователям!');    
+}
+
 ?>

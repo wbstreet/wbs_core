@@ -42,29 +42,30 @@ function del_casper(text) {
 function RA_raw(action, data, options) {
     options['func_after'] = options['func_after'] || options['func_after_load'];
     
-	RequestAction(action, options['url'], data, function() {
-		if (this.readyState != 4) return;
+    RequestAction(action, options['url'], data, function() {
+        if (this.readyState != 4) return;
         if (this.status==200) {
-	        var res = JSON.parse(del_casper(this.responseText));
-        	if (options['func_after']) options['func_after'](res);
-	        if (res['success'] == 1) {
-	        	if (options['func_success']) options['func_success'](res, options['arg_func_success']);
-	        } else {
-	        	if (options['func_error']) options['func_error'](res, options['arg_func_error']);
-	        }
-	    } else if (!navigator.onLine) {
-        	if (options['func_fatal']) options['func_fatal']('Нет соединения с Интернет');
+	    var res = JSON.parse(del_casper(this.responseText));
+            if (options['func_after']) options['func_after'](res);
+	    if (res['success'] == 1) {
+	       	if (options['func_success']) options['func_success'](res, options['arg_func_success']);
+	    } else {
+	        if (options['func_error']) options['func_error'](res, options['arg_func_error']);
+	    }
+	    if (res['location']) wiindow.location = res['location'];
+        } else if (!navigator.onLine) {
+            if (options['func_fatal']) options['func_fatal']('Нет соединения с Интернет');
         } else {
-        	if (options['func_fatal']) options['func_fatal']('Неизветсная ошибка');
+            if (options['func_fatal']) options['func_fatal']('Неизветсная ошибка');
         }
         if (window.grecaptcha && data['grecaptcha_widget_id']) grecaptcha.reset(data['grecaptcha_widget_id']); // сбрасываем капчу гугла
         if (options['wb_captcha_img']) wb_captcha_reload(options['wb_captcha_img']); // сбрасываем капчу websitebaker
-        })
+    });
 }
 
 function show_button_message(button, message, timeout) {
-	var process;
-    if (button.nextSibling == null || button.nextSibling.className != 'RA_ButtonProgress') {
+    var process;
+    if (button.nextSibling === null || button.nextSibling.className != 'RA_ButtonProgress') {
         process = document.createElement('span');
         process.style.marginLeft = '10px';
         process.className = 'RA_ButtonProgress';

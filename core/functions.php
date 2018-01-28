@@ -112,6 +112,11 @@ function idn_decode($url) {
     return [$url, false];
 }
 
+function len_base64($str, $kilo='B') {
+        $kilos = ['B'=>1, 'KB'=>1024, 'MB'=>1024*1024];
+        return strlen($str) * 6 / 8 / $kilos[$kilo];
+}
+
 /* Проверка прав  */
 
 function check_permission($rules) {

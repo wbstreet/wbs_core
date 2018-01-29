@@ -90,33 +90,36 @@ function light_absent_fields(form, absent_fields) {
 	}*/
 	for (i = 0; i<form.elements.length; i++) {
 		field = form.elements[i];
-		if (absent_fields.indexOf(field.name) != -1) {field.style.border = '1px solid red'; field.style.background = '#ffe6e6';}
+                if (field.type == 'button') continue;
+                if (absent_fields.indexOf(field.name) != -1) {field.style.border = '1px solid red'; field.style.background = '#ffe6e6';}
 		else {
-			if (field.type == 'button') continue;
-			field.style.border = '1px solid green'; field.style.background = '#e6ffe6';
+                    field.style.border = null; field.style.background = null;
+
+                    //field.style.border = '1px solid green'; field.style.background = '#e6ffe6';
 		}
 	}
 }
 
 function RA_ButtonProgress(action, data, button, sending_text, func_success, options) {
-	sending_text = sending_text || "Отправляется...";
-	show_button_message(button, sending_text)
-	options = options || [];
+    sending_text = sending_text || "Отправляется...";
+    show_button_message(button, sending_text)
+    options = options || [];
 
     RA_raw(action, data, {
     	func_success: function(res) {
-         	var timeout = res['timeout'] !== undefined ? res['timeout'] : 3000 ;
-        	show_button_message(button,  res['message'], timeout);
-        	if (func_success) func_success(res, options['arg_func_success']);
+            var timeout = res['timeout'] !== undefined ? res['timeout'] : 3000 ;
+            show_button_message(button,  res['message'], timeout);
+            light_absent_fields(button.form, []) // уберём красноту с полей, если они до этого были неверными.
+            if (func_success) func_success(res, options['arg_func_success']);
     	},
     	func_error: function(res) {
-        	show_button_message(button, 'ошибка: '+res['message']);
-        	animate_element(button, 'btn-err')
-        	if (res['absent_fields'] !== undefined) light_absent_fields(button.form, res['absent_fields']);
-                if (options['func_error']) options['func_error'](res, options['arg_func_error']);
+            show_button_message(button, 'ошибка: '+res['message']);
+            animate_element(button, 'btn-err')
+            if (res['absent_fields'] !== undefined) light_absent_fields(button.form, res['absent_fields']);
+            if (options['func_error']) options['func_error'](res, options['arg_func_error']);
     	},
     	func_fatal: function(res) {
-        	show_button_message(button, 'неизвестная ошибка(');
+            show_button_message(button, 'неизвестная ошибка(');
     	},
     	url: options['url'],
     	func_after: options['func_after'],
@@ -371,7 +374,7 @@ function YandexUniMap() {
 
 }
 
-function onclick_field(field, default_value) {
+/*function onclick_field(field, default_value) {
 	if (field.value == default_value) {field.value = '';}
 	field.addEventListener('blur', blur_field);
 	field.dataset.default = default_value;
@@ -381,7 +384,7 @@ function blur_field(field) {
 	var default_value = field.dataset.default;
 	if (field.value == '') {field.value = default_value;}
 	field.removeEventListener('blur', blur_field);
-}
+}*/
 
 function Tabs(headers_id, content_id, styles) {
 	var self = this;
@@ -626,329 +629,6 @@ function ContextMenu(id, items) {
     init();
 }
 
-/**
- * Модуль (внутри ячеек)
- */
-function PageModule() {
-	var self = this;
-}
-
-/**
- * Модель страницы, 
- * 
- * Модель и страница строятся согласно шаблону.
- * Модель состоит из строк с иконками модулей. Страница состоит из строк с модулями.
- */
-function PageStructure(rows) {
-	var self = this;
-	this.rows = rows;
-
-    this.count_row = function(row) {
-		return (row.children.length - 1) / 2;
-    }
-
-    this.count_cells = function(row) {
-		return (row.children.length - 1) / 2;
-    }
-
-    this.remove_row = function(row) {
-		row.nextElementSibling.remove();
-		row.remove();
-    }
-
-    this.create_vacant = function(level) {
-   		var vacant = document.createElement('div');
-   		vacant.className = 'vacant_'+level;
-        vacant.addEventListener('click', self.end_selecting_vacant)
-   		return vacant;
-    }
-
-    this.calc_width_row = function(row, event_func=false) {
-		if (event_func && row.className == 'vacant_row') row.addEventListener('click', event_func);
-		for(var j=0; j<row.children.length; j++) {
-			var cell = row.children[j];
-			if (cell.className == 'vacant_cell') {
-				if (event_func) cell.addEventListener('click', event_func);
-				continue;
-			}
-            cell.style.width = (100/self.count_cells(row) - 5) + '%'; // 3px - ширина вакантного места
-		}
-    }
-
-    this.calc_width = function(event_func=false) {
-		for(var i=0; i<self.rows.children.length; i++) {
-			self.calc_width_row(self.rows.children[i], event_func);
-		}
-    }
-
-    /**
-     * @todo переписать с использованием self.even_cell
-     */
-    this.get_row_number = function(vacant) {
-    	var path = {};
-    	
-    	if (vacant.className == 'vacant_row') {
-    		path.cell_num = 0;
-    		path.is_new_row = true;
-    		
-    	    var rows = self.rows;
-    	    for (var i=0; i<rows.children.length; i++) {
-    	    	if (rows.children[i].className != 'vacant_row') continue;
-    	    	console.log(rows.children[i]);
-    	    	if (vacant == rows.children[i]) {path.row_num = (i-2)/2; break;}
-    	    }
-    	} else if (vacant.className == 'vacant_cell') {
-    		path.is_new_row = false;
-
-    		var row = vacant.parentElement;
-    	    for (var i=0; i<row.children.length; i++) {
-    	    	if (row.children[i].className != 'vacant_cell') continue;
-    	    	if (vacant == row.children[i]) {path.cell_num = (i-2)/2; break;}
-    	    }
-    	    
-    	    var rows = row.parentElement;
-    	    for (var i=0; i<rows.children.length; i++) {
-    	    	if (rows.children[i].className != 'vacant_row') continue;
-    	    	if (row.nextElementSibling == rows.children[i]) {path.row_num = (i-2)/2; break;}
-    	    }
-    	}
-
-   	    return path;
-    	
-    }
-
-    this.replace_icon = function(vacant, icon) {
-    	old_icon_row = icon.parentElement;
-    	icon.nextElementSibling.remove();
-
-    	if (vacant.className == 'vacant_row') {
-    		var icon_row = document.createElement('div');
-    		vacant.parentElement.insertBefore(icon_row, vacant.nextElementSibling);
-    		vacant.parentElement.insertBefore(self.create_vacant('row'), icon_row.nextElementSibling);
-
-    		icon_row.appendChild(self.create_vacant('cell'));
-    		icon_row.appendChild(icon);
-    		icon_row.appendChild(self.create_vacant('cell'));
-    	} else if (vacant.className == 'vacant_cell') {
-    		vacant.parentElement.insertBefore(icon, vacant.nextElementSibling);
-    		vacant.parentElement.insertBefore(self.create_vacant('cell'), icon.nextElementSibling);
-    	}
-
-    	if (self.count_cells(old_icon_row) == 0) self.remove_row(old_icon_row);
-    	else self.calc_width_row(old_icon_row);
-    	
-    }
-    
-    /**
-     */
-    this.even_cell = function(options) {
-    	options = options || [];
-		for(var i=0; i<self.rows.children.length; i++) {
-			var row = self.rows.children[i];
-
-			if (options['func_row']) options['func_row'](row, i);
-			if (!options['func_cell']) continue;
-
-			for(var j=0; j<row.children.length; j++) {
-				var cell = row.children[j];
-				options['func_cell'](row, i, cell, j);
-			}
-		}
-    }
-
-    this.template_str2arr = function(strTemplate, module_data) {
-    	strTemplate = strTemplate.split('-');
-    	for (var i=0; i<strTemplate.length; i++) {
-    		strTemplate[i] = strTemplate[i].split(',');
-    	}
-    	return strTemplate;
-    }
-
-    this.template_arr2str = function(arrTemplate) {
-    	for (var i=0; i<arrTemplate.length; i++) {
-    		var row = [];
-    		for (var j=0; j<arrTemplate[i].length; j++) {row[row.length] = arrTemplate[i][j].id;}
-    		arrTemplate[i] = row.join(',');
-    	}
-    	console.log(arrTemplate);
-    	return arrTemplate.join('-');
-    }
-    
-    /**
-     * Строим иконки страницы согласно шаблону
-     */
-    this.build_by_template = function(arrTemplate, isInteractive) {
-    	//isInteractive = isInteractive === undefined ? true : isInteractive;
-
-        var html_icons = "";
-        /*if (isInteractive)*/ html_icons = "<div class='vacant_row'></div>";
-        for (var i=0; i<arrTemplate.length; i++) {
-        	var row = arrTemplate[i];
-            html_icons += "<div>";
-            /*if (isInteractive)*/ html_icons += "<div class='vacant_cell'></div>";
-            for (var j=0; j<row.length; j++) {
-                html_icons += "<div data-id='"+row[j].id+"' title='"+row[j].name+"'>"+row[j].name+"</div>";
-                /*if (isInteractive)*/ html_icons += "<div class='vacant_cell'></div>";            	
-            }
-            html_icons += "</div>";
-            /*if (isInteractive)*/ html_icons += "<div class='vacant_row'></div>";    	
-        }
-        self.rows.innerHTML = html_icons;
-    }
-}
-
-/**
- * Страница
- */
-function Page(rows) {
-	var self = this;
-	
-	this.rows = rows;
-
-    this.calc_width_row = function(row) {
-		for(var j=0; j<row.children.length; j++) {
-			var cell = row.children[j];
-            cell.style.width = (100/row.children.length) + '%';
-		}
-    }
-
-    this.calc_width = function(rows) {
-		for(var i=0; i<self.rows.children.length; i++) {
-			self.calc_width_row(self.rows.children[i]);
-		}        	
-    }
-
-    this.replace_module = function(path, icon) {
-    	var cell = document.getElementById("cell_pmodule"+icon.dataset.id);
-        var old_row = cell.parentElement;
-
-    	if (path.is_new_row) { // вставляем в новую строку
-            var to_row = document.createElement('div'); to_row.className = 'pm_row';
-            self.rows.insertBefore(to_row, self.rows.children[path.row_num+1]);
-            var before_cell = null;
-    		
-    	} else { // вставляем в имеющуюся строку
-    	    var to_row = self.rows.children[path.row_num];
-    	    var before_cell = to_row.children[path.cell_num+1];
-
-    	}
-
-        to_row.insertBefore(cell, before_cell);
-   	    if(old_row.children.length == 0) old_row.remove();
-    	self.calc_width();
-    }
-
-    /**
-      * Делаем массив-шаблон на основании страницы
-      */
-    this.make_template = function() {
-    	var template = [];
-    	for (var i=0; i<self.rows.children.length; i++) {
-    		var trow = [];
-    		var row = self.rows.children[i];
-    		
-    		for (var j=0; j<row.children.length; j++) {
-    			trow.push({
-    				name: row.children[j].dataset.name,
-    				id: row.children[j].dataset.id
-    			});
-    		}
-    		
-    		template.push(trow);
-    	}
-    	
-    	//console.log(template);
-    	return template;
-    }
-}
-
-/**
- * Параллельное управление страницей и её моделью
- */
-function PageEditor(page_rows, struct_rows, options, context_menu_items) {
-	var self = this;
-	this.cm = new ContextMenu('context_menu', context_menu_items);
-	this.cm.pe = self;
-	this.page = new Page(page_rows);
-	this.page_struct = new PageStructure(struct_rows, options);
-
-	options = options || [];
-	this.btn_save = options['btn_save']
-
-    this.end_selecting_vacant = function(e) {
-    	var vacant = e.currentTarget;
-    	var icon = self.cm.target_el;
-    	//console.log(vacant, icon);
-
-    	var path = self.page_struct.get_row_number(vacant);
-    	console.log(path)
-
-    	self.page_struct.replace_icon(vacant, icon);
-    	self.page_struct.calc_width_row(icon.parentNode);
-    	self.page.replace_module(path, icon);
-
-	   	self.page_struct.even_cell({
-	   		func_cell: function(row, i, cell, j) {
-				if (cell.className == 'vacant_cell') return;
-				cell.addEventListener('click', self.cm.open);
-	   		}
-	   	});
-    };
-
-    this.start_selecting_vacant = function() {
-    	var style = document.createElement('style');
-    	style.textContent = `
-    	    #module_icons .vacant_row:hover, #module_icons .vacant_cell:hover {
-    	    	background: red; cursor:pointer;
-    	    }
-    	`;
-    	document.body.appendChild(style);
-	   	self.page_struct.even_cell({
-	   		func_cell: function(row, i, cell, j) {
-				if (cell.className == 'vacant_cell') return;
-				cell.removeEventListener('click', self.cm.open);
-	   		}
-	   	});
-    }
-
-    this.ev_open_context_menu = function(e) {
-    	self.cm.open(e);
-    }
-
-    this.btn_save_click = function(e) {
-    	var btn = e.target;
-    	
-    	var el_template = document.createElement('input');
-    	el_template.type = 'hidden'; el_template.name = 'template';
-    	btn.form.appendChild(el_template);
-
-        var arrTemplate = self.page.make_template();
-        var strTemplate = self.page_struct.template_arr2str(arrTemplate);
-    	
-    	btn.form.template.value = strTemplate;
-    	
-    	sendform(btn, 'cabinet_edit_page_template_custom', {func_after_success: function() {}});
-    }
-
-	this.init = function() {
-		var template = self.page.make_template();
-		self.page_struct.build_by_template(template);
-
-        self.page_struct.calc_width(self.end_selecting_vacant);
-	   	self.page_struct.even_cell({
-	   		func_cell: function(row, i, cell, j) {
-				if (cell.className == 'vacant_cell') return;
-				cell.addEventListener('click', self.cm.open);
-	   		}
-	   	});
-	   	
-	   	if (options['btn_save']) options['btn_save'].addEventListener('click', this.btn_save_click);
-	}
-	
-	this.init();
-
-}
-
 function open_edit_page_window() {
 	var w = W.open('edit_page_window', {text_title:'Редактирование страницы'});
 	var context_menu_items = [['Редактировать'], ['Оформление'], ['Переместить', function(e, cm) {
@@ -1168,7 +848,8 @@ function set_params(params, options) {
     let search = new URLSearchParams(options.search);
     for (let param in params) {
         if (!params.hasOwnProperty(param)) continue;
-        search.set(param, params[param]);
+        if (params[param] === null) search.delete(param);
+        else search.set(param, params[param]);
     }
     
     if (options.reload) {

@@ -214,12 +214,19 @@ function build_insert($table, $fields, $value_lines=false) {
 
 /* ----------- Промежуточный уровень: проверяем результат ----------- */
 
+function db_get_err($sql, $type) {
+    global $database;
+        $err = "{$type}_row() '$sql' :: ".$database->get_error();
+    error_log($err);
+    return $err;
+}
+
 function check_update($sql) {
 	global $database;
 
 	if ($database->query($sql)) return true;
 	//if ($database->is_error()) return "update_row() '$sql' :: ".$database->get_error();
-	if ($database->is_error()) error_log("update_row() '$sql' :: ".$database->get_error());
+	if ($database->is_error()) return db_get_err($sql, 'update');
 
 	return false;
 }
@@ -228,7 +235,7 @@ function check_insert($sql) {
 
         if ($database->query($sql)) return true;
         //if ($database->is_error()) return "update_row() '$sql' :: ".$database->get_error();
-        if ($database->is_error()) error_log("insert_row() '$sql' :: ".$database->get_error());
+        if ($database->is_error()) return db_get_err($sql, 'insert');
 
         return false;
 }
@@ -237,7 +244,7 @@ function check_delete($sql) {
 
         if ($database->query($sql)) return true;
         //if ($database->is_error()) return "update_row() '$sql' :: ".$database->get_error();
-        if ($database->is_error()) error_log("delete_row() '$sql' :: ".$database->get_error());
+        if ($database->is_error()) return db_get_err($sql, 'delete');
 
         return false;
 }
@@ -250,7 +257,7 @@ function check_select($sql) {
 
 	$r = $database->query($sql);
 	//if ($database->is_error()) return "select_rows() '$sql' :: ".$database->get_error();
-	if ($database->is_error()) { error_log("select_rows() '$sql' :: ".$database->get_error()); return false; }
+	if ($database->is_error()) { return db_get_err($sql, 'select'); }
 	if ($r->numRows() == 0) return null;
 	return $r;
 }

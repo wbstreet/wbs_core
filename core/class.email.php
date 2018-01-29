@@ -1,11 +1,13 @@
 <?php
 
 class WbsEmail {
-	function __construct() {
+	function __construct($wb) {
 		$this->tbl_templates_of_letter = "`".TABLE_PREFIX."mod_wbs_core_templates_of_letter`";
 		$this->tbl_templates_of_letter_sended = "`".TABLE_PREFIX."mod_wbs_core_templates_of_letter_sended`";
+
+                $this->wb = $wb;
 	}
-	
+
 	protected function _send($to, $body, $subject) {
 		    /*if(IT_IS_ORIGINAL_PORTAL === false) {
 		    	$body = "******************************<br>".htmlentities($to)
@@ -82,21 +84,19 @@ class WbsEmail {
     }
 
     function get_templates($sets=[]) {
-	global $database, $sql_builder;
-	if (isset($sets['letter_id'])) $letter_id = get_number($sets['letter_id']); else $letter_id = null;
-	if (isset($sets['letter_name'])) $letter_name = mysql_escape_string($sets['letter_name']); else $letter_name = null;
+        global $database, $sql_builder;
+        if (isset($sets['letter_id'])) $letter_id = get_number($sets['letter_id']); else $letter_id = null;
+        if (isset($sets['letter_name'])) $letter_name = $database->escapeString($sets['letter_name']); else $letter_name = null;
 
-        $sql_builder->clear();
+        $where = ["1=1"];
+        if ($letter_id !== null) $where[] = "`letter_template_id`=$letter_id";
+        if ($letter_name !== null) $where[] = "`letter_template_name`='$letter_name'";
 
-        $sql_builder->add_raw_where("1=1");
-        if ($letter_id !== null) $sql_builder->add_raw_where("`letter_template_id`=$letter_id");
-        if ($letter_name !== null) $sql_builder->add_raw_where("`letter_template_name`='$letter_name'");
-
-		$sql = "SELECT * FROM {$this->tbl_templates_of_letter} WHERE ".$sql_builder->build_where();
-		$result = $database->query($sql);
-		if ($database->is_error()) return 'email->get_templates: '.$database->get_error();
-		if ($result->numRows() == 0) return null;
-		return $result;
+        $sql = "SELECT * FROM {$this->tbl_templates_of_letter} WHERE ".implode(" AND ", $where);
+        $result = $database->query($sql);
+        if ($database->is_error()) return 'email->get_templates: '.$database->get_error();
+        if ($result->numRows() == 0) return null;
+        return $result;
     }
 
     function update_template($fields, $template_id) {
@@ -117,8 +117,8 @@ class WbsEmail {
     }
 
     function get_letters($sets=[]) {
-		global $database, $sql_builder;
-		if (isset($sets['letter_id'])) $letter_id = get_number($sets['letter_id']); else $letter_id = null;
+        global $database, $sql_builder;
+        if (isset($sets['letter_id'])) $letter_id = get_number($sets['letter_id']); else $letter_id = null;
 
         $sql_builder->clear();
 

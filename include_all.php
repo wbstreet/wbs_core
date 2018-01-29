@@ -18,6 +18,8 @@ $clsFilter = new FilterData();
 
 if (!defined('WB_URL')) require(__DIR__.'/../../config.php'); // для инициализации сессии
 
+if (!defined('FUNCTIONS_FILE_LOADED')) include(__DIR__.'/../../framework/functions.php');
+
 include(WB_PATH.'/modules/wbs_core/include.php');
 
 if (!defined('SQL_TOOLS_MODULE_LOADED')) include(WB_PATH.'/modules/wbs_core/core/functions.sql_tools.php');

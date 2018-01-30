@@ -30,19 +30,27 @@ CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_templates_of_letter_sended` (
 -- class.storage_image.php
 --
 
-DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_image`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_img`;
 CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_img` (
   `img_id` int(11) NOT NULL AUTO_INCREMENT,
-  `path_a` varchar(1) NOT NULL,
-  `path_b` varchar(1) NOT NULL,
-  `latname` varchar(10) NOT NULL,
-  `sizes` int(11),
-  `size_y` int(11),
-  `is_sended` int(11) NOT NULL DEFAULT '0',
-  `sender_user_id` int(11) DEFAULT NULL,
-  `send_from_page_id` int(11) DEFAULT NULL,
+  `group_latname` varchar(10) NOT NULL,
+  `md5` varchar(32) NOT NULL,
+  `ext` varchar(10) NOT NULL,
+  `user_id` int(11),
+  --  `is_deleted` int(11) NOT NULL DEFAULT '0',
+--  `sizes` int(11),
+--  `size_y` int(11),
   PRIMARY KEY (`img_id`)
 ){TABLE_ENGINE=MyISAM};
+
+-- DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_img_settings`;
+-- CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_img_settings` (
+--  `settings_id` int(11) NOT NULL AUTO_INCREMENT,
+--  `formats` varchar(1) NOT NULL,
+--  `max_size` varchar(1) NOT NULL,
+--  `latname` varchar(10) NOT NULL,
+--  PRIMARY KEY (`settings_id`)
+-- ){TABLE_ENGINE=MyISAM};
 
 --
 -- class.storage_settlement.php

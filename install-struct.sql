@@ -33,8 +33,7 @@ CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_templates_of_letter_sended` (
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_img`;
 CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_img` (
   `img_id` int(11) NOT NULL AUTO_INCREMENT,
-  `group_latname` varchar(10) NOT NULL,
-  `md5` varchar(32) NOT NULL,
+  `md5` varchar(32) NOT NULL, -- uniq
   `ext` varchar(10) NOT NULL,
   `user_id` int(11),
   --  `is_deleted` int(11) NOT NULL DEFAULT '0',

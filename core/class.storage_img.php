@@ -26,7 +26,19 @@ class WbsStorageImg() {
         return $sDir."/".substr($md5, 7).".".$ext;
     }
     
-    function transform_size($sOldPath, $sNewPath, $aSize) {
+    function transform_size($sOldPath, $aSize, $sNewPath=null) {
+        $sNewPath = $sNewPath == null ? $sOldPath: $sNewPath;
+        list($w, $h) = $aSize;
+
+        $image = new Imagick($image_name);
+        $width = $image->getImageWidth();
+        $height = $image->getImageHeight();
+
+        if ($width / $height >= $w/$h) { $image->thumbnailImage(0, $h);}
+        else {$image->thumbnailImage($w, 0);}
+
+        $image->cropImage($w, $h, 0, 0);
+        $image->writeImage($sNewPath);
     }
 
     function get($iId, $sSize='origin') {
@@ -54,7 +66,7 @@ class WbsStorageImg() {
             if (!file_exists($sPath)) {
             
                 // трансформируем картинку
-                $this->transform_size($this->get_img_path('origin', $aImg['md5'], $aImg['ext']), $sPath, explode('x', $sSize));
+                $this->transform_size($this->get_img_path('origin', $aImg['md5'], $aImg['ext']), explode('x', $sSize), $sPath);
                 if (!file_exists($sPath)) return "Изображение не найдено!";
             }
         }
@@ -82,7 +94,7 @@ class WbsStorageImg() {
         }
         
         $sPath = $this->get_img_path('origin', $md5, $ext])
-        if (!move_loaded_file($sTmpPath, $sPath)) return "Не удалось переместить файл!"
+        if (!move_uploaded_file($sTmpPath, $sPath)) return "Не удалось переместить файл!"
 
         $r = insert_row($this->tbl_img, [
             'md5'=>$md5,

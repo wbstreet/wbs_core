@@ -55,6 +55,53 @@ CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_img` (
 -- class.storage_settlement.php
 --
 
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement`;
+CREATE TABLE `rf_mod3_settlement` (
+  `settlement_id` int(11) NOT NULL AUTO_INCREMENT,
+  `country_id` int(11) NOT NULL DEFAULT '1',
+  `region_id` int(11) NOT NULL,
+  `rayon_id` int(11) NOT NULL,
+  `any_settlement_id` int(11) NOT NULL,
+  `settlement_type_id` int(11) NOT NULL,
+  PRIMARY KEY (`settlement_id`)
+){TABLE_ENGINE=MyISAM};
+
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_any_settlement`;
+CREATE TABLE `rf_mod3_settlement_any_settlement` (
+  `any_settlement_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  PRIMARY KEY (`any_settlement_id`)
+){TABLE_ENGINE=MyISAM};
+
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_country`;
+CREATE TABLE `rf_mod3_settlement_country` (
+  `country_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  PRIMARY KEY (`country_id`)
+){TABLE_ENGINE=MyISAM};
+
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_rayon`;
+CREATE TABLE `rf_mod3_settlement_rayon` (
+  `rayon_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  PRIMARY KEY (`rayon_id`)
+){TABLE_ENGINE=MyISAM};
+
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_region`;
+CREATE TABLE `rf_mod3_settlement_region` (
+  `region_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  PRIMARY KEY (`region_id`)
+){TABLE_ENGINE=MyISAM};
+
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_type`;
+CREATE TABLE `rf_mod3_settlement_type` (
+  `type_id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `short_name` varchar(4) NOT NULL,
+  PRIMARY KEY (`type_id`)
+){TABLE_ENGINE=MyISAM};
+
 --
 -- class.storage_contact.php
 --

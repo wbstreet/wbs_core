@@ -5,15 +5,16 @@ Date: 2018-01-30
 */
 
 
-#http://hilocomod.blogspot.ru/2010/03/linux.html 
+#http://hilocomod.blogspot.ru/2010/03/linux.html
+# http://php.net/manual/en/image.constants.php
 
 class WbsStorageImg() {
     function __construct() {
         $this->tbl_img = "`".TABLE_PREFIX."mod_wbs_core_img`";
         
         $this->aLimits = [
-            'format'=>'jpg,png',
-            'maxsize'=>2048, // Kb
+            'exts'=>['jpg', 'png'],
+            'maxsize'=>2*1024, // Kb
             'minsize'='0' // Kb
         ],
 
@@ -48,7 +49,7 @@ class WbsStorageImg() {
         
         $r = $database->query("SELECT * FROM {$this->tbl_img} WHERE `img_id`=".process_value($id));
         if ($database->is_error()) return $database->get_error();
-        if ($r->numRows() === 0) return "Изображение не найдено!";        
+        if ($r->numRows() === 0) return "Изображение не найдено!";
         $aImg = $r->fetchRow();
 
         // Формируем путь к изображению
@@ -83,19 +84,36 @@ class WbsStorageImg() {
         if (!file_exists($sTmpPath)) return 'Изображение не существует!';
         //$aTmpPath = pathinfo($sTmpPath);
 
+        // определяем некоторые характеристики изображения
+        
         $md5 = md5($sTmpPath);
-        $ext = '';
-
+        
+        $aImgType = getimagesize($sTmpPath, false);
+        $ext = image_type_to_extension($aImgType[2]);
+        
+        // проверяем изображение на соответсвие правилам
+        
+        if (!in_array($ext, $aLimits['exts'])) return "Изображение имеет неразрешённый формат";
+        $size = filesize($sTmpPath);
+        if ($size === false || $size > $aLimits['maxsize']) return "Изображение имеет недопустимый размер - до {$aLimits['maxsize']} Kb!";
+        if ($size === false || $size < $aLimits['minsize']) return "Изображение имеет недопустимый размер!";
+        
+        // проверяем на наличие такого же изображения
+        
         $r = $database->query("SELECT * FROM {$this->tbl_img} WHERE `md5`=".process_value($md5));
         if ($database->is_error()) return $database->get_error();
         if ($r->numRows() > 0) {
             $aImg = $r->fetchRow();
             return (integer)$aImg['img_id'];
         }
+
+        // перемещаем изображение
         
         $sPath = $this->get_img_path('origin', $md5, $ext])
         if (!move_uploaded_file($sTmpPath, $sPath)) return "Не удалось переместить файл!"
 
+        // добавляем запись в базу
+        
         $r = insert_row($this->tbl_img, [
             'md5'=>$md5,
             'ext'=>$ext,

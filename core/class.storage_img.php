@@ -8,15 +8,15 @@ Date: 2018-01-30
 #http://hilocomod.blogspot.ru/2010/03/linux.html
 # http://php.net/manual/en/image.constants.php
 
-class WbsStorageImg() {
+class WbsStorageImg {
     function __construct() {
         $this->tbl_img = "`".TABLE_PREFIX."mod_wbs_core_img`";
         
         $this->aLimits = [
             'exts'=>['jpg', 'png'],
             'maxsize'=>2*1024, // Kb
-            'minsize'='0' // Kb
-        ],
+            'minsize'=>'0' // Kb
+        ];
 
         $this->path = WB_PATH."/media/wbs_core/storage_img";
     }
@@ -88,8 +88,8 @@ class WbsStorageImg() {
         
         $md5 = md5($sTmpPath);
         
-        $aImgType = getimagesize($sTmpPath, false);
-        $ext = image_type_to_extension($aImgType[2]);
+        $aImgType = getimagesize($sTmpPath);
+        $ext = image_type_to_extension($aImgType[2], false);
         
         // проверяем изображение на соответсвие правилам
         
@@ -109,15 +109,15 @@ class WbsStorageImg() {
 
         // перемещаем изображение
         
-        $sPath = $this->get_img_path('origin', $md5, $ext])
-        if (!move_uploaded_file($sTmpPath, $sPath)) return "Не удалось переместить файл!"
+        $sPath = $this->get_img_path('origin', $md5, $ext);
+        if (!move_uploaded_file($sTmpPath, $sPath)) return "Не удалось переместить файл!";
 
         // добавляем запись в базу
         
         $r = insert_row($this->tbl_img, [
             'md5'=>$md5,
             'ext'=>$ext,
-            'user_id'=$admin->get_user_id()
+            'user_id'=>$admin->get_user_id()
         ]);
         if ($r !== true) return $r;
 

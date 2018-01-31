@@ -13,7 +13,7 @@ class WbsStorageImg {
         $this->tbl_img = "`".TABLE_PREFIX."mod_wbs_core_img`";
         
         $this->aLimits = [
-            'exts'=>['jpg', 'png'],
+            'exts'=>['jpeg', 'jpg', 'png'],
             'maxsize'=>2*1024, // Kb
             'minsize'=>'0' // Kb
         ];
@@ -31,7 +31,7 @@ class WbsStorageImg {
         $sNewPath = $sNewPath == null ? $sOldPath: $sNewPath;
         list($w, $h) = $aSize;
 
-        $image = new Imagick($image_name);
+        $image = new Imagick($sOldPath);
         $width = $image->getImageWidth();
         $height = $image->getImageHeight();
 
@@ -72,11 +72,39 @@ class WbsStorageImg {
             }
         }
 
-        return $sPath;
+        return str_replace(WB_PATH, WB_URL, $sPath);
         
     }
-   
+
+    function get_without_db($sMd5, $sExt, $sSize='origin') {
+        global $database;
+
+        // Формируем путь к изображению
+        
+        $sPath = $this->get_img_path($sSize, $sMd5, $sExt);
+
+        // Проверяем существование изображения
+        
+        if ($sSize === 'origin') {
+        
+            if (!file_exists($sPath)) return "Изображение не найдено!"; // вернуть путь к картинке "Ошибка сервера: картинка не найдена"
+
+        } else {
+
+            if (!file_exists($sPath)) {
+            
+                // трансформируем картинку
+                $this->transform_size($this->get_img_path('origin', $sMd5, $sExt), explode('x', $sSize), $sPath);
+                if (!file_exists($sPath)) return "Изображение не найдено!";
+            }
+        }
+
+        return str_replace(WB_PATH, WB_URL, $sPath);
+        
+    }
+
     function save($sTmpPath, $aLimits=null) {
+        global $database, $admin;
     
         if ($aLimits === null) $aLimits = $this->aLimits;
         // здесь бы дополнить пользовательский массив массивом по умолчанию ( limits.update(this->limits) )
@@ -86,7 +114,7 @@ class WbsStorageImg {
 
         // определяем некоторые характеристики изображения
         
-        $md5 = md5($sTmpPath);
+        $md5 = md5_file($sTmpPath);
         
         $aImgType = getimagesize($sTmpPath);
         $ext = image_type_to_extension($aImgType[2], false);
@@ -94,8 +122,8 @@ class WbsStorageImg {
         // проверяем изображение на соответсвие правилам
         
         if (!in_array($ext, $aLimits['exts'])) return "Изображение имеет неразрешённый формат";
-        $size = filesize($sTmpPath);
-        if ($size === false || $size > $aLimits['maxsize']) return "Изображение имеет недопустимый размер - до {$aLimits['maxsize']} Kb!";
+        $size = filesize($sTmpPath) / 1024;
+        if ($size === false || $size > $aLimits['maxsize']) return "Изображение имеет недопустимый размер - $size Kb. Разрешено до {$aLimits['maxsize']} Kb!";
         if ($size === false || $size < $aLimits['minsize']) return "Изображение имеет недопустимый размер!";
         
         // проверяем на наличие такого же изображения
@@ -107,11 +135,6 @@ class WbsStorageImg {
             return (integer)$aImg['img_id'];
         }
 
-        // перемещаем изображение
-        
-        $sPath = $this->get_img_path('origin', $md5, $ext);
-        if (!move_uploaded_file($sTmpPath, $sPath)) return "Не удалось переместить файл!";
-
         // добавляем запись в базу
         
         $r = insert_row($this->tbl_img, [
@@ -121,6 +144,11 @@ class WbsStorageImg {
         ]);
         if ($r !== true) return $r;
 
+        // перемещаем изображение
+        
+        $sPath = $this->get_img_path('origin', $md5, $ext);
+        if (!move_uploaded_file($sTmpPath, $sPath)) return "Не удалось переместить файл!";
+        
         return $database->getLastInsertId();
     }
     
@@ -130,8 +158,8 @@ class WbsStorageImg {
         
         foreach($aTmpPaths as $i => $sTmpPath) {
             $r = $this->save($sTmpPath, $aLimits);
-            if (gettype($r) !== 'string') $aErrors[$sTmpPath] = $r;
-            else $aIds[$sTmpPath] = $r;
+            if (gettype($r) !== 'string') $aIds[$sTmpPath] = $r;
+            else $aErrors[$sTmpPath] = $r;
         }
 
         return [$aIds, $aErrors];

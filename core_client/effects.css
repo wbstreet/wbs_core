@@ -1,147 +1,196 @@
-/*
- * @author Polyakov Konstantin
- * @created_date 10.02.2017
- */
+/*
+ * @author Polyakov Konstantin
+ * @created_date 10.02.2017
+ */
 
-/*  keyframes and button's animatrion styles.  */
-@keyframes btn_err {
-    0% {
-        transform: translateX(-3px);
-    }
-    10% {
-        transform: translateX(2px);
-    }
-    15% {
-        transform: translateX(-3px);
-    }
-    20% {
-        transform: translateX(2px);
-    }
-    40% {
-        transform: translateX(-3px);
-    }
-    60% {
-        transform: translateX(2px);
-    }
-    80% {
-        transform: translateX(-2px);
-    }
-    100% {
-        transform: translateX(0);
-    }
-    
-}
-.btn-err {
-    display: inline-block;
-    animation: btn_err 0.5s ease;
-    animation-iteration-count: 1;
-}
-/* Адаптивная таблица */
+/*  keyframes and button's animatrion styles.  */
+@keyframes btn_err {
+    0% {
+        transform: translateX(-3px);
+    }
+    10% {
+        transform: translateX(2px);
+    }
+    15% {
+        transform: translateX(-3px);
+    }
+    20% {
+        transform: translateX(2px);
+    }
+    40% {
+        transform: translateX(-3px);
+    }
+    60% {
+        transform: translateX(2px);
+    }
+    80% {
+        transform: translateX(-2px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+   
+}
 
-@media screen and (max-device-width: 720px) {
-    .adaptive_table > tr > td, .adaptive_table > tbody > tr > td {
-        display: inline-block;
-    }
-}
+.btn-err {
+    display: inline-block;
+    animation: btn_err 0.5s ease;
+    animation-iteration-count: 1;
+}
 
-/* Эффекты при наведении курсора */
+/* Адаптивная таблица */
 
-[class~="an_scaling09"]:hover {
-    transform: scale(0.9);
-    transition: all 0.3s ease;
-}
-[class~="an_scaling11"]:hover {
-    transform: scale(1.1);
-    transition: all 0.3s ease;
-}
 
-/* Группы кнопок */
+@media screen and (max-device-width: 720px) {
 
-.btn-group {
-    display: inline-block;
-}
-.btn-group > input[type="button"] {
-    border-radius: 0;
-    margin-right: 0;
-    margin-left: 0;
-    border-right-width: 0;
-}
+    .adaptive_table > tr > td, .adaptive_table > tbody > tr > td {
+       display: inline-block;
+    }
+}
 
-.btn-group > input[type="button"]:first-child {
-    border-radius: 5px 0 0 5px;
-    margin-right: 0;
-}
-.btn-group > input[type="button"]:last-child {
-    border-radius: 0 5px 5px 0;
-    margin-left: 0;
-    border-right-width: 1px;
-}
 
-/* Переменные  */
+/* Эффекты при наведении курсора */
 
-:root {
-    --color-button-background: #faf143;
-    --color-button-border: #99a4ad;
-}
 
-/* Элементы формы */
+[class~="an_scaling09"]:hover {
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+}
 
-input[type='text'], input[type='email'], input[type='tel'], input[type='button'], input[type='number'], input[type='password'], input[type='submit'], select, textarea {
-    color: #224265;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
-    margin: 5px;
-}
-input[type='text'], input[type='email'], input[type='tel'], input[type='number'], input[type='password'], textarea {
-    background: #f9f9f9;
-    padding: 5px 3px 5px 4px;
-    border: 1px solid var(--color-button-border);
-}
-select, option {
-    background: #c9cdd0;
-    padding: 2px 3px 2px 2px;
-    border: 1px solid #7596af;
-    cursor: pointer;
-}
-input[type='button'], select {
-    background: var(--color-button-background);
-    padding: 5px 3px 5px 4px;
-    border: 1px solid var(--color-button-border);
-    cursor: pointer;
-    color: green;
-}
-input[type='button']:hover {
-    background: var(--color-button-background);
-    padding: 5px 3px 5px 4px;
-    border: 1px solid var(--color-button-border);
-}
+[class~="an_scaling11"]:hover {
+    transform: scale(1.1);
+    transition: all 0.3s ease;
+}
 
-/* Parallax base styles
- - -------------------------------------------- */ *
- /** {
-  m argin: 0;                                    *
-  padding:0;
-  }*/
- /*
-  < div class="parallax">                        *
-  <div class="parallax__layer parallax__layer--back">
-  This is the background
-  </div>
-  <div class="parallax__layer parallax__layer--base">
-  This is the foreground
-  </div>
-  </div>
-  */
- /*.parallax {
-  h eight: 100vh;                               *
-  overflow-x: hidden;
-  perspective: 1px;
-  }
-  .parallax__layer {
-  position: absolute;
-  padding: 100vh 0;*/ /* add some padding to force scrollbars */
-  /*}
-   . parallax__layer--back {                         *
-   transform: translateZ(-1px);
-   }*/
+
+/* Группы кнопок */
+
+
+.btn-group {
+    display: inline-block;
+}
+
+.btn-group > input[type="button"] {
+    border-radius: 0;
+    margin-right: 0;
+    margin-left: 0;
+    border-right-width: 0;
+}
+
+
+.btn-group > input[type="button"]:first-child {
+    border-radius: 5px 0 0 5px;
+    margin-right: 0;
+}
+
+.btn-group > input[type="button"]:last-child {
+    border-radius: 0 5px 5px 0;
+    margin-left: 0;
+    border-right-width: 1px;
+}
+
+
+/* Переменные  */
+
+
+:root {
+    --color-button-background: #faf143;
+    --color-button-border: #99a4ad;
+}
+
+
+/* Элементы формы */
+
+
+input[type='text'], input[type='email'], input[type='tel'], input[type='button'], input[type='number'], input[type='password'], input[type='submit'], select, textarea {
+    color: #224265;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    margin: 5px;
+}
+
+input[type='text'], input[type='email'], input[type='tel'], input[type='number'], input[type='password'], textarea {
+    background: #f9f9f9;
+    padding: 5px 3px 5px 4px;
+    border: 1px solid var(--color-button-border);
+}
+
+select, option {
+    background: #c9cdd0;
+    padding: 2px 3px 2px 2px;
+    border: 1px solid #7596af;
+    cursor: pointer;
+}
+
+input[type='button'], select {
+    background: var(--color-button-background);
+    padding: 5px 3px 5px 4px;
+    border: 1px solid var(--color-button-border);
+    cursor: pointer;
+    color: green;
+
+}
+
+input[type='button']:hover {
+    background: var(--color-button-background);
+    border: 1px solid var(--color-button-border);
+}
+
+
+/* Parallax base styles
+
+ - -------------------------------------------- */
+ *
+ /** {
+
+  m argin: 0;
+                                    *
+  padding:0;
+
+  }*/
+
+ /*
+
+  < div class="parallax">
+                        *
+  <div class="parallax__layer parallax__layer--back">
+
+  This is the background
+
+  </div>
+
+  <div class="parallax__layer parallax__layer--base">
+
+  This is the foreground
+
+  </div>
+
+  </div>
+
+  */
+
+ /*.parallax {
+
+  h eight: 100vh;
+                               *
+  overflow-x: hidden;
+
+  perspective: 1px;
+
+  }
+
+  .parallax__layer {
+
+  position: absolute;
+
+  padding: 100vh 0;*/ /* add some padding to force scrollbars */
+
+  /*}
+
+   . parallax__layer--back {
+                         *
+   transform: translateZ(-1px);
+
+   }*/
+
   /*--------------------------------------------- */

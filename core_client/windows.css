@@ -56,3 +56,37 @@ Created for PodNogami
     max-height: calc(95vh - 64px);
     overflow-y: auto;
 }
+
+/* --------------------------------
+ *           Gallery
+ - *-------------------------------*/
+
+.gallery .windowTitle {
+    display: none;
+}
+.gallery {
+    background: #000000a3;
+    box-shadow: none;
+    border-radius: 0;
+    text-align: center;
+    max-width: none;
+    width: 100%;
+    top: 0;
+}
+.gallery .windowBody {
+    padding: 0;
+    max-height: none;
+    height: 100vh;
+}
+.gallery .main_image {
+    max-height: 100%;
+    padding: 50px 0 50px 0;
+}
+.gallery .buttons {
+    position: fixed;
+    bottom: 30px;
+    width:100%;
+}
+.gallery .buttons input {
+    padding: 5px 25px 5px 25px;
+}

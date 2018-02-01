@@ -250,13 +250,16 @@ function Window() {
         var sheet = document.getElementById(w.id + '_sheet');
         if (sheet) {
             sheet.style.transition = 'opacity 0.4s';
-            sheet.style.opacity = '0'
+            w.style.transition = 'opacity 0.4s';
+            sheet.style.opacity = '0';
+            w.style.opacity = '0';
             setTimeout(function() {
                 sheet.remove();
+                w.remove();
             }, 400);
         }
 
-        //if (self.close_direction == 'left') {
+        /*//if (self.close_direction == 'left') {
             w.style.transition = 'left 0.5s';
             w.style.left = '-1000px';
             self.close_direction = 'right';
@@ -271,7 +274,7 @@ function Window() {
         setTimeout(function() {
             if (self.zi) self.zi.remove(w);
             w.remove();
-        },500);
+        },500);*/
     };
 
      this.show = function(w) {
@@ -432,4 +435,71 @@ function DND(element, options) {
     var _dnd = dnd;
     element.addEventListener('mousedown', _dnd); // для мыши
     element.addEventListener('touchstart', _dnd); // для сенсорного дисплея
+}
+
+/* --------------------------------
+ *           Gallery
+ - *-------------------------------*/
+
+"use strict"
+
+class Gallery {
+    
+    constructor(links) {
+        this.open = this.open.bind(this);
+        this.change = this.change.bind(this);
+        this.links = links;
+        
+        let i = 0;
+        for (let link of links) {
+            link.addEventListener('click', this.open);
+            link.dataset.i = i;
+            i += 1;
+        }
+        
+        this.temoplate = `
+<img class='main_image'>
+<br>
+<div class='buttons'>
+    <input class='prev_img' type="button" value='<'>
+    <input type="button" value='X' onclick="W.close(this);">
+    <input class='next_img' type="button" value='>'>
+</div>`;
+        
+    }
+    
+    open(e) {
+    e.preventDefault();
+    let img = e.target;
+    
+    let w = W.open('_fm2', {add_sheet:true, create_method:'create', body_content: this.temoplate, position: 'none'});
+    w.classList.add('gallery');
+    
+    W.get_wbody(w).addEventListener('click', function(e) {
+    if (e.target.classList.contains('windowBody')) W.close(e.target)}
+    );
+    
+    W.get_wbody(w).querySelector('.main_image').src = img.parentElement.href;
+    W.get_wbody(w).querySelector('.main_image').dataset.i = img.parentElement.dataset.i;
+    W.get_wbody(w).querySelector('.next_img').addEventListener('click', this.change);
+    W.get_wbody(w).querySelector('.prev_img').addEventListener('click', this.change);
+    }
+    
+    change(e) {
+    let btn = e.target;
+    let main_img = W.get_w(btn).querySelector('.main_image');
+    
+    let i = parseInt(main_img.dataset.i);
+    
+    if (btn.className === 'next_img') {
+        if (i === this.links.length-1) i = 0;
+        else i = i + 1;
+    } else if (btn.className === 'prev_img') {
+        if (i === 0) i = this.links.length-1;
+        else i = i - 1;
+    }
+    main_img.dataset.i = i;
+    main_img.src = this.links[i].href;
+    }
+    
 }

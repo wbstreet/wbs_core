@@ -8,7 +8,7 @@ CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_templates_of_letter` (
   `letter_template_name` varchar(100) NOT NULL,
   `letter_template_body` text NOT NULL,
   `letter_template_subject` varchar(255) NOT NULL DEFAULT '',
-  `letter_template_description` varchar(255) NOT NULL DEFAULT ''
+  `letter_template_description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`letter_template_id`)
 ){TABLE_ENGINE=MyISAM}; 
 

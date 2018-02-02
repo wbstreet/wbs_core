@@ -449,22 +449,23 @@ class Gallery {
         this.open = this.open.bind(this);
         this.change = this.change.bind(this);
         this.links = links;
+        this.i = 0;
         
-        let i = 0;
         for (let link of links) {
             link.addEventListener('click', this.open);
-            link.dataset.i = i;
-            i += 1;
+            link.dataset.i =this.i;
+            this.i += 1;
         }
         
         this.temoplate = `
-<img class='main_image'>
-<br>
-<div class='buttons'>
-    <input class='prev_img' type="button" value='<'>
-    <input type="button" value='X' onclick="W.close(this);">
-    <input class='next_img' type="button" value='>'>
-</div>`;
+        <img class='main_image'>
+        <br>
+        <div class='buttons'>
+        <input class='prev_img' type="button" value='<'>
+        <input type="button" value='X' onclick="W.close(this);">
+        <input class='next_img' type="button" value='>'>
+        </div>
+        `;
         
     }
     
@@ -480,7 +481,7 @@ class Gallery {
     );
     
     W.get_wbody(w).querySelector('.main_image').src = img.parentElement.href;
-    W.get_wbody(w).querySelector('.main_image').dataset.i = img.parentElement.dataset.i;
+    this.i = parseInt(img.parentElement.dataset.i);
     W.get_wbody(w).querySelector('.next_img').addEventListener('click', this.change);
     W.get_wbody(w).querySelector('.prev_img').addEventListener('click', this.change);
     }
@@ -489,17 +490,14 @@ class Gallery {
     let btn = e.target;
     let main_img = W.get_w(btn).querySelector('.main_image');
     
-    let i = parseInt(main_img.dataset.i);
-    
     if (btn.className === 'next_img') {
-        if (i === this.links.length-1) i = 0;
-        else i = i + 1;
+        if (this.i === this.links.length-1) this.i = 0;
+        else this.i += 1;
     } else if (btn.className === 'prev_img') {
-        if (i === 0) i = this.links.length-1;
-        else i = i - 1;
+        if (this.i === 0) this.i = this.links.length-1;
+        else this.i -= 1;
     }
-    main_img.dataset.i = i;
-    main_img.src = this.links[i].href;
+    main_img.src = this.links[this.i].href;
     }
     
-}
+    }

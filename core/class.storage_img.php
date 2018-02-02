@@ -47,7 +47,7 @@ class WbsStorageImg {
 
         // Вынимаем информацию о картинке
         
-        $r = $database->query("SELECT * FROM {$this->tbl_img} WHERE `img_id`=".process_value($id));
+        $r = $database->query("SELECT * FROM {$this->tbl_img} WHERE `img_id`=".process_value($iId));
         if ($database->is_error()) return $database->get_error();
         if ($r->numRows() === 0) return "Изображение не найдено!";
         $aImg = $r->fetchRow();

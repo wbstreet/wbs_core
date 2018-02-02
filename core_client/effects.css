@@ -45,6 +45,7 @@
 
     .adaptive_table > tr > td, .adaptive_table > tbody > tr > td {
        display: inline-block;
+       width: 100%;
     }
 }
 

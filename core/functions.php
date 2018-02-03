@@ -20,8 +20,10 @@ function echo_creator($link_style='', $image_style='', $sign_style='') {
 
 function echoImageLoader($name, $image_url, $w, $h, $is_ret=false) {
    $s = '';
-   $s .=  '<div style="width:'.$w.'; height:'.$h.'; background-image:url('.$image_url.'?a='.time().'); background-size: contain; background-repeat: no-repeat; border: 2px solid #C7D8EA;">';
-   $s .= '<input style="opacity:0; cursor:pointer; width:'.$w.'; height:'.$h.';" name="'.$name.'" type="file" onchange="show_pic(this.files[0], function(image_data, el) {el.parentElement.style.backgroundImage = \'url(\'+image_data+\')\'}, this)">';
+   $s .=  '<div style="width:'.$w.'; height:'.$h.'; background-image:url('.$image_url.'?a='.time().'); background-size: contain; background-repeat: no-repeat; border: 2px solid #C7D8EA;position:relative;">';
+   //$s .= '<input style="opacity:0; cursor:pointer; width:'.$w.'; height:'.$h.';" name="'.$name.'" type="file" onchange="show_pic(this.files[0], function(image_data, el) {el.parentElement.style.backgroundImage = \'url(\'+image_data+\')\'}, this)">'';
+   $s .= '<input style="opacity:0; cursor:pointer; width:'.$w.'; height:'.$h.';" name="'.$name.'" type="file" onchange="show_image(this, this.parentElement)">';
+   $s .= '<input style="position:absolute;bottom:5px;" type="button" value="Отменить" onclick="this.parentElement.style.backgroundImage=this.parentElement.dataset.url; this.parentElement.querySelector(\'input\').value = \'\'">';
    $s .= '</div>';
  
    if ($is_ret) return $s;

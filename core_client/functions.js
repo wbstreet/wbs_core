@@ -807,18 +807,19 @@ function show_pager(cur, max, func_url, nav) {
 };
 /* конец паджинатора */
 
-function show_image(input, img) {
-	//var form = input.closest('form');
-	var reader = new FileReader();
-   	reader.onload = function(event) {
-        var image_data = event.target.result;
-        //console.log(prefix+id_pic);
-        img.src = image_data;
-        img.style.display = 'inline-block';
-        img.dataset.last = 'set';
-    };
-    reader.readAsDataURL(input.files[0])
-   	//reader.readAsDataURL(form[id_pic].files[0])
+function show_image(input, img) {
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        var image_data = event.target.result;
+        if (img.src) {
+            img.dataset.url = img.src;
+            img.src = image_data;
+        } else {
+            img.dataset.url = img.style.backgroundImage;
+            img.style.backgroundImage = "url(" +image_data+ ")";
+        }
+    };
+    reader.readAsDataURL(input.files[0])
 }
 
 function content_by_api(api, tag, options) {
@@ -848,7 +849,8 @@ function set_params(params, options) {
     let search = new URLSearchParams(options.search);
     for (let param in params) {
         if (!params.hasOwnProperty(param)) continue;
-        if (params[param] === null) search.delete(param);
+        if (params[param] === null) search.delete(param);
+
         else search.set(param, params[param]);
     }
     

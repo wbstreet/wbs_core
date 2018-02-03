@@ -31,7 +31,8 @@ class WbsStorageImg {
         $sNewPath = $sNewPath == null ? $sOldPath: $sNewPath;
         list($w, $h) = $aSize;
 
-        $image = new Imagick($sOldPath);
+        /*$image = new Imagick($sOldPath);
+        
         $width = $image->getImageWidth();
         $height = $image->getImageHeight();
 
@@ -39,7 +40,25 @@ class WbsStorageImg {
         else {$image->thumbnailImage($w, 0);}
 
         $image->cropImage($w, $h, 0, 0);
-        $image->writeImage($sNewPath);
+        $image->writeImage($sNewPath);*/
+
+        $image = new Imagick($sOldPath);
+        $image = $image->coalesceImages(); 
+        
+        $width = $image->getImageWidth();
+        $height = $image->getImageHeight();
+
+        foreach ($image as $frame) {
+            if ($width / $height >= $w/$h) { $frame->thumbnailImage(0, $h);}
+            else {$frame->thumbnailImage($w, 0);}
+            
+            $frame->setImagePage($w, $h, 0, 0); 
+            $frame->cropImage($w, $h, 0, 0);
+        }
+        $image = $image->deconstructImages();
+        $image->stripImage(); // удаляем exif
+        $image->writeImages($sNewPath, true);
+
     }
 
     function get($iId, $sSize='origin') {

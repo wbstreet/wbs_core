@@ -520,8 +520,9 @@ function saveTabToBackup(tab_name, args, content_name) {
 	localStorage.setItem('args', JSON.stringify(args || {}));
 }
 
-function get_from_ckEditor() {
-	return document.getElementsByClassName('cke_wysiwyg_frame')[0].contentDocument.body.innerHTML;
+function get_from_ckEditor(el=null) {
+    if (el === null) el = document;
+    return el.getElementsByClassName('cke_wysiwyg_frame')[0].contentDocument.body.innerHTML;
 }
 
 function ZIndex(start_index) {
@@ -807,19 +808,32 @@ function show_pager(cur, max, func_url, nav) {
 };
 /* конец паджинатора */
 
-function show_image(input, img) {
-    var reader = new FileReader();
-    reader.onload = function(event) {
-        var image_data = event.target.result;
-        if (img.src) {
-            img.dataset.url = img.src;
-            img.src = image_data;
-        } else {
-            img.dataset.url = img.style.backgroundImage;
-            img.style.backgroundImage = "url(" +image_data+ ")";
-        }
-    };
-    reader.readAsDataURL(input.files[0])
+function show_image(input, img) {
+
+    var reader = new FileReader();
+
+    reader.onload = function(event) {
+
+        var image_data = event.target.result;
+
+        if (img.src) {
+
+            img.dataset.url = img.src;
+
+            img.src = image_data;
+
+        } else {
+
+            img.dataset.url = img.style.backgroundImage;
+
+            img.style.backgroundImage = "url(" +image_data+ ")";
+
+        }
+
+    };
+
+    reader.readAsDataURL(input.files[0])
+
 }
 
 function content_by_api(api, tag, options) {

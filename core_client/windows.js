@@ -98,35 +98,29 @@ function Window() {
             return wbody;
     }
 
-    this.createBody = function(idBody, method) {
-            // берём готовое тело
-            if (method == 'clone') {
-                return self.createBodyByClone(idBody);
-        // создаём пустое тело
-            } else if (method == 'create') {
-            return self.createBodyByCreate(idBody);
-        // если готового тела нет, то создваём пустое, иначе берём готовое.
-            } else if (method == 'auto') {
-                if (document.getElementById(idBody)) return self.createBodyByClone(idBody);
-                else { return self.createBodyByCreate(idBody); }
-            }
-    }
-
     this.createWindow = function(idBody, method, replaceContentBody) {
         method = method || 'clone';
         replaceContentBody = replaceContentBody || undefined;
 
-            var w = self._w.cloneNode(true);
-            var wbody = self.createBody(idBody, method);
+        var wbody, w = self._w.cloneNode(true);
+        // Создание тела
+        if (method == 'clone') { // берём готовое тело
+            wbody = self.createBodyByClone(idBody);
+        } else if (method == 'create') { // создаём пустое тело
+            wbody = self.createBodyByCreate(idBody);
+        } else if (method == 'auto') { // если готового тела нет, то создваём пустое, иначе берём готовое.
+            if (document.getElementById(idBody)) wbody = self.createBodyByClone(idBody);
+            else { wbody = self.createBodyByCreate(idBody); }
+        }
 
-            if (!wbody.classList.contains('windowBody')) {wbody.classList.add('windowBody'); console.log('У тела окна должен быть установлен класс "windowBody"! Проверьте имя класса у тела с id = "'+idBody+'"!');}
-            if (replaceContentBody !== undefined) wbody.innerHTML = replaceContentBody; 
-            w.appendChild(wbody);
+        if (!wbody.classList.contains('windowBody')) {wbody.classList.add('windowBody'); console.log('У тела окна должен быть установлен класс "windowBody"! Проверьте имя класса у тела с id = "'+idBody+'"!');}
+        if (replaceContentBody !== undefined) wbody.innerHTML = replaceContentBody; 
+        w.appendChild(wbody);
         w.querySelector(".windowBClose").addEventListener('click', function(e) {self.close(e.target)});
-            return w;
+        return w;
     };
 
-        this.open = function (idBody, arg_options) {
+    this.open = function (idBody, arg_options) {
 
         // получение опций из аргументов
                 arg_options = arg_options || {};
@@ -241,40 +235,37 @@ function Window() {
 
     this.close = function(child_el) {
         w = self.get_w(child_el);
-
+        
         self.count_open[self.get_wbody(w).id] -= 1;
         self.count_open_total -= 1;
-
+        
         self.del_data(w);
-
+        
         var sheet = document.getElementById(w.id + '_sheet');
         if (sheet) {
             sheet.style.transition = 'opacity 0.4s';
-            w.style.transition = 'opacity 0.4s';
             sheet.style.opacity = '0';
-            w.style.opacity = '0';
-            setTimeout(function() {
-                sheet.remove();
-                w.remove();
-            }, 400);
         }
-
+        w.style.transition = 'opacity 0.4s';
+        w.style.opacity = '0';
+        
         /*//if (self.close_direction == 'left') {
-            w.style.transition = 'left 0.5s';
-            w.style.left = '-1000px';
-            self.close_direction = 'right';
+        w.style.transition = 'left 0.5s';
+        w.style.left = '-1000px';
+        self.close_direction = 'right';
         //} else if (self.close_direction == 'right') {
-         //   w.style.right = String((parseInt(screen.width) - parseInt(getComputedStyle(w).width))/2) + 'px';
-          //  w.style.left = 'auto';
+        //   w.style.right = String((parseInt(screen.width) - parseInt(getComputedStyle(w).width))/2) + 'px';
+        //  w.style.left = 'auto';
         //    w.style.transition = 'right 0.5s';
-         //   w.style.right = '-1000px';
-         //   self.close_direction = 'left';
-        //}
+        //   w.style.right = '-1000px';
+        //   self.close_direction = 'left';
+        //}*/
         
         setTimeout(function() {
             if (self.zi) self.zi.remove(w);
-            w.remove();
-        },500);*/
+                   if (sheet) sheet.remove();
+                   w.remove();
+        },400);
     };
 
      this.show = function(w) {

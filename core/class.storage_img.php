@@ -107,7 +107,7 @@ class WbsStorageImg {
         global $database, $admin;
     
         if ($aLimits === null) $aLimits = $this->aLimits;
-        // здесь бы дополнить пользовательский массив массивом по умолчанию ( limits.update(this->limits) )
+        else $aLimits = array_merge($this->aLimits, $aLimits);
         
         if (!file_exists($sTmpPath)) return 'Изображение не существует!';
         //$aTmpPath = pathinfo($sTmpPath);
@@ -121,8 +121,8 @@ class WbsStorageImg {
         
         // проверяем изображение на соответсвие правилам
         
-        if (!in_array($ext, $aLimits['exts'])) return "Изображение имеет неразрешённый формат";
-        $size = filesize($sTmpPath) / 1024;
+        if (!in_array($ext, $aLimits['exts'])) return "Изображение имеет неразрешённый формат: {$ext}";
+        $size = intdiv(filesize($sTmpPath), 1024);
         if ($size === false || $size > $aLimits['maxsize']) return "Изображение имеет недопустимый размер - $size Kb. Разрешено до {$aLimits['maxsize']} Kb!";
         if ($size === false || $size < $aLimits['minsize']) return "Изображение имеет недопустимый размер!";
         

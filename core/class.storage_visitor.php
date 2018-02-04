@@ -62,23 +62,31 @@ class WbsStorageVisitor {
         return (int)$r;
     }
         
-    function write($page_id, $user_id=null) {
-        global $database;
+    function write() {
+        global $database, $admin;
         //SERVER_PROTOCOL
         //REQUEST_METHOD
+
+        // Опрелделяем пользователя 
+        if (isset($admin) && $admin !== null && $admin->is_authenticated()) $user_id = $admin->get_user_id();
+        else $user_id = null;
         
         // сохраняем браузер
+
         $browser_id = $this->browser2id($_SERVER['HTTP_USER_AGENT']);
         if (gettype($browser_id) == 'string') { return $browser_id."- ";}
 
         // сохраняем рефера
-        $referer = ORG_REFERER !== null ? ORG_REFERER: ''; //$_SERVER['HTTP_REFERER'];
+
+        //$referer = defined(ORG_REFERER) ? (ORG_REFERER !== null ? ORG_REFERER: '') : ($_SERVER['HTTP_REFERER'] ?? '');
+        $referer = ORG_REFERER !== null ? ORG_REFERER: '';
+        list($referer, $is_error) = idn_decode($referer);
         $refer_id = $this->refer2id($referer);
         if (gettype($refer_id) == 'string') { return " -".$refer_id;}
 
         // добавляем основную запись        
         $fields = [
-            'page_id'=>get_number($page_id),
+            'page_id'=>PAGE_ID,
             'refer'=>$refer_id,
             'browser'=>$browser_id,
             'ip'=>$_SERVER['REMOTE_ADDR'],
@@ -112,5 +120,15 @@ class WbsStorageVisitor {
 // UPDATE `rf_mod2_visitors` SET `refer`=(SELECT `refer_id` FROM `rf_mod2_visitor_refer` WHERE `rf_mod2_visitor_refer`.`refer_url`=`rf_mod2_visitors`.`refer`)
 
 // UPDATE `rf_mod2_visitors` SET `browser`=(SELECT `browser_id` FROM `rf_mod2_visitor_browser` WHERE `rf_mod2_visitor_browser`.`browser_name`=`rf_mod2_visitors`.`browser`)
+
+/*
+
+<?php
+    include(WB_PATH.'/modules/wbs_core/include_all.php');
+    $r = $clsStorageVisitor->write();
+    if ($r !== true) echo $r;
+?>
+
+*/
 
 ?>

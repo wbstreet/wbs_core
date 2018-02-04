@@ -30,6 +30,17 @@ function echoImageLoader($name, $image_url, $w, $h, $is_ret=false) {
    echo $s;
 }
 
+function show_editor($content, $script_file, $height='100%', $width='400') {
+        global $admin;
+    //$old = $_SERVER['SCRIPT_NAME']; $_SERVER['SCRIPT_NAME'] = preg_replace("/.*\/public_html/", '', $script_file);
+    //$old2 = $_SERVER['SCRIPT_FILENAME']; $_SERVER['SCRIPT_FILENAME'] = $script_file;
+        require(WB_PATH.'/modules/ckeditor/include.php');
+    echo $admin->getFTAN()."\n";
+    show_wysiwyg_editor($name='content', $id='content', $content, $height, $width);
+    //$_SERVER['SCRIPT_NAME'] = $old;
+    //$_SERVER['SCRIPT_FILENAME'] = $old2;
+}
+
 function generate_image_name($len=15, $registr='both') {
         $salt = "0123456789";
         if (in_array($registr, ['both', 'up'])) $salt .= "ABCHEFGHJKMNPQRSTUVWXYZ";

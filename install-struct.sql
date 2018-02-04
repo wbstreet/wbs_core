@@ -103,5 +103,37 @@ CREATE TABLE `rf_mod3_settlement_type` (
 ){TABLE_ENGINE=MyISAM};
 
 --
+-- class.storage_visitor.php
+--
+
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_visitor`;
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_visitor` (
+  `id_visitor` int(11) NOT NULL AUTO_INCREMENT,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ip` varchar(39) NOT NULL,
+  `browser` int(11) NOT NULL,
+  `refer` int(11) DEFAULT NULL,
+  `page_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_visitor`)
+){TABLE_ENGINE=MyISAM};
+
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_visitor_browser`;
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_visitor_browser` (
+  `browser_id` int(11) NOT NULL AUTO_INCREMENT,
+  `browser_name` varchar(255) NOT NULL,
+  `browser_is_bot` int(11) NOT NULL DEFAULT '0',
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`browser_id`)
+){TABLE_ENGINE=MyISAM};
+
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_visitor_refer`;
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_visitor_refer` (
+  `refer_id` int(11) NOT NULL AUTO_INCREMENT,
+  `refer_url` varchar(255) NOT NULL,
+  PRIMARY KEY (`refer_id`)
+){TABLE_ENGINE=MyISAM};
+
+--
 -- class.storage_contact.php
 --

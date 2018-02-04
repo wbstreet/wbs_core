@@ -33,12 +33,9 @@ CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_templates_of_letter_sended` (
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_img`;
 CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_img` (
   `img_id` int(11) NOT NULL AUTO_INCREMENT,
-  `md5` varchar(32) NOT NULL, -- uniq
+  `md5` varchar(32) NOT NULL,
   `ext` varchar(10) NOT NULL,
   `user_id` int(11),
-  --  `is_deleted` int(11) NOT NULL DEFAULT '0',
---  `sizes` int(11),
---  `size_y` int(11),
   PRIMARY KEY (`img_id`)
 ){TABLE_ENGINE=MyISAM};
 
@@ -56,7 +53,7 @@ CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_img` (
 --
 
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement`;
-CREATE TABLE `rf_mod3_settlement` (
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_settlement` (
   `settlement_id` int(11) NOT NULL AUTO_INCREMENT,
   `country_id` int(11) NOT NULL DEFAULT '1',
   `region_id` int(11) NOT NULL,
@@ -67,35 +64,35 @@ CREATE TABLE `rf_mod3_settlement` (
 ){TABLE_ENGINE=MyISAM};
 
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_any_settlement`;
-CREATE TABLE `rf_mod3_settlement_any_settlement` (
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_settlement_any_settlement` (
   `any_settlement_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   PRIMARY KEY (`any_settlement_id`)
 ){TABLE_ENGINE=MyISAM};
 
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_country`;
-CREATE TABLE `rf_mod3_settlement_country` (
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_settlement_country` (
   `country_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   PRIMARY KEY (`country_id`)
 ){TABLE_ENGINE=MyISAM};
 
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_rayon`;
-CREATE TABLE `rf_mod3_settlement_rayon` (
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_settlement_rayon` (
   `rayon_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   PRIMARY KEY (`rayon_id`)
 ){TABLE_ENGINE=MyISAM};
 
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_region`;
-CREATE TABLE `rf_mod3_settlement_region` (
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_settlement_region` (
   `region_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   PRIMARY KEY (`region_id`)
 ){TABLE_ENGINE=MyISAM};
 
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_type`;
-CREATE TABLE `rf_mod3_settlement_type` (
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_settlement_type` (
   `type_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(200) NOT NULL,
   `short_name` varchar(4) NOT NULL,

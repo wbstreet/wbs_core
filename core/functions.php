@@ -109,7 +109,7 @@ function idn_decode($url) {
     }
     if (class_exists('idna_convert')) {
         $IDN = new idna_convert();
-        return [$IDN->decode(WB_URL), true];
+        return [$IDN->decode($url), true];
     }
     return [$url, false];
 }

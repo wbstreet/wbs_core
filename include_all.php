@@ -29,10 +29,12 @@ if (!defined('CUSTOM_FUNCTIONS_LOADED')) include(WB_PATH.'/modules/wbs_core/core
 if (!class_exists('Agreement')) include(WB_PATH.'/modules/wbs_core/core/class.agreement.php');
 if (!class_exists('WbsEmail')) include(WB_PATH.'/modules/wbs_core/core/class.email.php');
 if (!class_exists('WbsStorageImg')) include(WB_PATH.'/modules/wbs_core/core/class.storage_img.php');
+if (!class_exists('WbsStorageVisitor')) include(WB_PATH.'/modules/wbs_core/core/class.storage_visitor.php');
 
 $clsAgreemnt = new Agreement($database);
 $clsFilter = new FilterData();
 $clsStorageImg = new WbsStorageImg();
+$clsStorageVisitor = new WbsStorageVisitor();
 
 if (!class_exists('wb')) include(WB_PATH.'/framework/class.wb.php');
 if (!isset($wb) || !($wb instanceof wb)) { $wb = new wb(); }

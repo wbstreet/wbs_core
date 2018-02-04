@@ -312,80 +312,6 @@ function set_form_fields(data, form) {
     }
 }
 
-function YandexUniMap() {
-    var map_obj = null;
-    var self = this;
-
-    this.onready = function(func, map_id) {
-        self.map_id = map_id;
-        ymaps.ready(function() {func(self);});
-    }
-
-    this.address2coords = function(address, onAddress2Coord_success, onAddress2Coord_error) {
-        var myGeocoder = ymaps.geocode(address);
-        myGeocoder.then(
-            function (res) {
-                onAddress2Coord_success(res.geoObjects.get(0).geometry.getCoordinates());
-            },
-            function (err) {
-                onAddress2Coord_error('Ошибка');
-            }
-        );
-    }
-
-    this.coords2address = function(address, onAddress2Coord_success, onAddress2Coord_error) {
-        var myGeocoder = ymaps.geocode(address);
-        myGeocoder.then(
-            function (res) {
-                onAddress2Coord_success(res.geoObjects.get(0).geometry.getCoordinates());
-            },
-            function (err) {
-                onAddress2Coord_error('Ошибка');
-            }
-        );
-    }
- 
-    this.buildMap = function(center, zoom) {
-        //alert(self)
-        self.map_obj = new ymaps.Map(self.map_id, {
-            'center': center,
-            'zoom': zoom
-        });
-    }
-    
-    this.addPoint = function(coords) {
-        var myGeoObject = new ymaps.GeoObject({
-            geometry: {
-                type: "Point",// тип геометрии - точка
-                coordinates: coords // координаты точки
-           }
-        }, {draggable:true});
-        self.map_obj.geoObjects.add(myGeoObject);
-    }
-
-    this.setCenter = function(coords, ms) {
-        if (ms == undefined || ms == 0) self.map_obj.setCenter(coords);
-        else self.map_obj.panTo(coords, {delay: ms});
-    }
-
-    this.init = function() {
-        self.map_obj = new ymaps.Map("map", {'center': [58, 37], 'zoom':7});
-    } 
-
-}
-
-/*function onclick_field(field, default_value) {
-	if (field.value == default_value) {field.value = '';}
-	field.addEventListener('blur', blur_field);
-	field.dataset.default = default_value;
-}
-function blur_field(field) {
-	var field = field.target;
-	var default_value = field.dataset.default;
-	if (field.value == '') {field.value = default_value;}
-	field.removeEventListener('blur', blur_field);
-}*/
-
 function Tabs(headers_id, content_id, styles) {
 	var self = this;
 	this.styles = styles;
@@ -884,4 +810,37 @@ function wb_captcha_reload(img){
 
     img.src = set_time_mark(a.protocol + '//' + a.hostname + a.pathname);
 
+}
+
+
+function DND(element, options) {
+    function dnd(e) { // drag and drop
+        e.currentTarget.ondragstart = function() {return false;};
+        document.body.onmousedown = function() {return false;}; // выключаем  выделение текста
+        options['data'] = options['data'] || {};
+        options['data']['isSensorDisplay'] = e.touches === undefined ? false : true
+        
+        if (options['down']) options['down'](e, options['data']);
+        
+        function end(e) {
+            document.removeEventListener('mousemove', move);
+            document.removeEventListener('mouseup', end);
+            document.removeEventListener('touchmove', move);
+            document.removeEventListener('toucend', end);
+            document.body.onmousedown = function() {return true;}; // включаем  выделение текста
+            if (options['up']) options['up'](e, options['data']);
+        }
+        
+        function move(e) {
+            if (options['move']) options['move'](e, options['data']);
+        }
+        document.addEventListener('mousemove', move);
+        document.addEventListener('mouseup',  end);
+        document.addEventListener('touchmove', move);
+        document.addEventListener('touchend', end);
+    }
+    
+    var _dnd = dnd;
+    element.addEventListener('mousedown', _dnd); // для мыши
+    element.addEventListener('touchstart', _dnd); // для сенсорного дисплея
 }

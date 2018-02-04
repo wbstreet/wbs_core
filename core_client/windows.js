@@ -396,38 +396,6 @@ function Coords(el) {
         
 }
 
-function DND(element, options) {
-        function dnd(e) { // drag and drop
-            e.currentTarget.ondragstart = function() {return false;};
-        document.body.onmousedown = function() {return false;}; // выключаем  выделение текста
-        options['data'] = options['data'] || {};
-            options['data']['isSensorDisplay'] = e.touches === undefined ? false : true
-
-        if (options['down']) options['down'](e, options['data']);
-
-            function end(e) {
-                document.removeEventListener('mousemove', move);
-                document.removeEventListener('mouseup', end);
-                document.removeEventListener('touchmove', move);
-                document.removeEventListener('toucend', end);
-            document.body.onmousedown = function() {return true;}; // включаем  выделение текста
-            if (options['up']) options['up'](e, options['data']);
-            }
-
-            function move(e) {
-                if (options['move']) options['move'](e, options['data']);
-            }
-            document.addEventListener('mousemove', move);
-            document.addEventListener('mouseup',  end);
-            document.addEventListener('touchmove', move);
-            document.addEventListener('touchend', end);
-         }
-
-    var _dnd = dnd;
-    element.addEventListener('mousedown', _dnd); // для мыши
-    element.addEventListener('touchstart', _dnd); // для сенсорного дисплея
-}
-
 /* --------------------------------
  *           Gallery
  - *-------------------------------*/

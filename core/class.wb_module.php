@@ -14,6 +14,10 @@ class Addon {
         $this->pathTemplates = WB_PATH."/modules/{$this->name}/templates/";
         $this->urlAPI = WB_URL."/modules/{$this->name}/api.php";
         if (! is_dir($this->pathMedia)) {mkdir($this->pathMedia, 0777, true);}
+
+        $loader = new Twig_Loader_Filesystem([$this->pathTemplates]);
+        $this->_twig = new Twig_Environment($loader);
+        
     }
     
     function getUrlAction($action) {
@@ -48,6 +52,15 @@ class Addon {
             return true;
         }
     }
+
+    function render($file_name, $fields) {
+        $fields = array_merge($fields, [
+            'url_api'=>"url:'{$clsModPortalObjProject->urlAPI}'",
+        ]);
+
+        echo $this->_twig->render($file_name, $fields);
+    }
+    
 }
 
 ?>

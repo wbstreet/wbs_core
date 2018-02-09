@@ -55,7 +55,7 @@ class Addon {
 
     function render($file_name, $fields) {
         $fields = array_merge($fields, [
-            'url_api'=>"url:'{$clsModPortalObjProject->urlAPI}'",
+            'url_api'=>"url:'{$this->urlAPI}'",
         ]);
 
         echo $this->_twig->render($file_name, $fields);

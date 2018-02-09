@@ -88,7 +88,8 @@ function light_absent_fields(form, absent_fields) {
 		field = form.elements[field];
 		if (field !== undefined) field.style.border = border;
 	}*/
-	for (i = 0; i<form.elements.length; i++) {
+        if (form === null || form === undefined) return;
+        for (i = 0; i<form.elements.length; i++) {
 		field = form.elements[i];
                 if (field.type == 'button') continue;
                 if (absent_fields.indexOf(field.name) != -1) {field.style.border = '1px solid red'; field.style.background = '#ffe6e6';}

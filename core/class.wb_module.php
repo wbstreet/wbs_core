@@ -36,15 +36,17 @@ class Addon {
     }
     
     function _import_sql($filepath, $name) {
+        global $database;
         // create tables from sql dump file
         $dirpath = dirname($filepath);
         $filename = $dirpath.'/install-'.$name.'.sql';
         if (file_exists($filename) && is_readable($filename)) {
-        $r = $database->SqlImport($filename, TABLE_PREFIX, $filepath);
-        if ($database->is_error()) {
-            return $database->get_error();
+            $r = $database->SqlImport($filename, TABLE_PREFIX, $filepath);
+            if ($database->is_error()) {
+                return $database->get_error();
+            }
+            return true;
         }
-        return true;
     }
 }
 

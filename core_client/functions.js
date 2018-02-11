@@ -52,7 +52,7 @@ function RA_raw(action, data, options) {
 	    } else {
 	        if (options['func_error']) options['func_error'](res, options['arg_func_error']);
 	    }
-	    if (res['location']) wiindow.location = res['location'];
+	    if (res['location']) window.location = res['location'];
         } else if (!navigator.onLine) {
             if (options['func_fatal']) options['func_fatal']('Нет соединения с Интернет');
         } else {

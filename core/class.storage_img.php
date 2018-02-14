@@ -18,7 +18,19 @@ class WbsStorageImg {
             'minsize'=>'0' // Kb
         ];
 
-        $this->path = WB_PATH."/media/wbs_core/storage_img";
+        $this->path = WB_PATH."/media/mod_wbs_core/storage_img";
+    }
+    
+    function get_default($sSize) {
+        $sPath = $this->path."/{$sSize}";
+        make_dir($sPath);
+        $sPath = $sPath."/default.png";
+        
+        if ($sSize !== 'origin' && !file_exists($sPath)) {
+            if (file_exists($this->path."/origin/default.png")) $this->transform_size($this->path."/origin/default.png", explode('x', $sSize), $sPath);
+        }
+        
+        return str_replace(WB_PATH, WB_URL, $sPath);
     }
 
     function get_img_path($sSize, $md5, $ext) {
@@ -64,11 +76,13 @@ class WbsStorageImg {
     function get($iId, $sSize='origin') {
         global $database;
 
+        if ($iId === null || $iId === '') return $this->get_default($sSize);
+
         // Вынимаем информацию о картинке
         
         $r = $database->query("SELECT * FROM {$this->tbl_img} WHERE `img_id`=".process_value($iId));
-        if ($database->is_error()) return $database->get_error();
-        if ($r->numRows() === 0) return "Изображение не найдено!";
+        if ($database->is_error()) return $this->get_default($sSize);
+        if ($r->numRows() === 0) $this->get_default($sSize);
         $aImg = $r->fetchRow();
 
         // Формируем путь к изображению
@@ -79,7 +93,7 @@ class WbsStorageImg {
         
         if ($sSize === 'origin') {
         
-            if (!file_exists($sPath)) return "Изображение не найдено!"; // вернуть путь к картинке "Ошибка сервера: картинка не найдена"
+            if (!file_exists($sPath)) return $this->get_default($sSize);
 
         } else {
 
@@ -87,7 +101,7 @@ class WbsStorageImg {
             
                 // трансформируем картинку
                 $this->transform_size($this->get_img_path('origin', $aImg['md5'], $aImg['ext']), explode('x', $sSize), $sPath);
-                if (!file_exists($sPath)) return "Изображение не найдено!";
+                if (!file_exists($sPath)) return $this->get_default($sSize);
             }
         }
 
@@ -106,7 +120,7 @@ class WbsStorageImg {
         
         if ($sSize === 'origin') {
         
-            if (!file_exists($sPath)) return "Изображение не найдено!"; // вернуть путь к картинке "Ошибка сервера: картинка не найдена"
+            if (!file_exists($sPath)) return $this->get_default($sSize);
 
         } else {
 
@@ -114,7 +128,7 @@ class WbsStorageImg {
             
                 // трансформируем картинку
                 $this->transform_size($this->get_img_path('origin', $sMd5, $sExt), explode('x', $sSize), $sPath);
-                if (!file_exists($sPath)) return "Изображение не найдено!";
+                if (!file_exists($sPath)) return $this->get_default($sSize);
             }
         }
 

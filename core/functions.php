@@ -154,4 +154,73 @@ function check_auth() {
     if (!$admin->is_authenticated()) print_error('Доступ разрешён только зарегистрированным пользователям!');    
 }
 
+// https://vk.com/dev/widgets_for_sites
+class VKTools {
+        function __construct() {
+                
+        }
+        
+        function echo_widget_js($widgets) {
+                if (in_array('share', $widgets)) {
+                echo '<!-- Put this script tag to the <head> of your page -->
+                  <script type="text/javascript" src="https://vk.com/js/api/share.js?94" charset="windows-1251"></script>';
+                }
+        }
+
+        function echo_share_button($text='Поделиться') {
+                echo "
+                     <div style='display:inline-block;vertical-align:bottom;'>
+                             <!-- Put this script tag to the place, where the Share button will be -->
+                     <script type='text/javascript'><!--
+                         document.write(VK.Share.button(false,{type: 'round', text: '$text'}));
+                     --></script>
+             </div>";
+        }
+
+}
+
+// https://apiok.ru/ext/like
+class OKTools {
+        function __construct() {
+                
+        }
+        
+        
+        function echo_share_button() {
+                ?>
+        <div style='display:inline-block;vertical-align:super;'>
+                        <div id="ok_shareWidget"></div>
+                        <script>
+                        !function (d, id, did, st, title, description, image) {
+                          var js = d.createElement("script");
+                          js.src = "https://connect.ok.ru/connect.js";
+                          js.onload = js.onreadystatechange = function () {
+                          if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
+                            if (!this.executed) {
+                              this.executed = true;
+                              setTimeout(function () {
+                                OK.CONNECT.insertShareWidget(id,did,st, title, description, image);
+                              }, 0);
+                            }
+                          }};
+                          d.documentElement.appendChild(js);
+                        }(document,"ok_shareWidget",document.URL,'{"sz":20,"st":"rounded","ck":1}',"","","");
+                        </script>
+                </div>
+    
+    <?php
+        }
+}
+
+function share_page_link() {
+    $clsVKTools = new VKTools;
+    $clsOKTools = new OKTools;
+    
+    $clsVKTools->echo_widget_js(['share']);
+    echo '<div style="width:100%;text-align:right;">';
+        $clsVKTools->echo_share_button();
+        $clsOKTools->echo_share_button();
+    echo '</div>';
+}
+
 ?>

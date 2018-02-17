@@ -148,15 +148,18 @@ function build_order($keys=null, $direction=null) {
 }
 
 function build_limit($offset=null, $count=null) {
-	if ($offset === '') $offset = null;
-	if ($count === '') $count = null;
-	
-	if ($offset === null && $count === null) return '';
+    if (gettype($offset) === 'string') $offset = (integer)(preg_replace('/[^0-9]/', '', $offset));
+    else if (gettype($offset) !== 'integer') $offset = null;
 
-	if ($offset === null) $offset = 0;
-	if ($count === null) $count = 0;
+    if (gettype($count) === 'string') $count = (integer)(preg_replace('/[^0-9]/', '', $count));
+    else if (gettype($count) !== 'integer') $count = null;
+        
+    if ($offset === null && $count === null) return '';
 
-	return " LIMIT $offset,$count ";
+    if ($offset === null) $offset = 0;
+    if ($count === null) $count = 0;
+
+    return " LIMIT $offset,$count ";
 }
 
 function build_update($table, $fields, $where=null) {
@@ -314,9 +317,12 @@ function insert_row_uniq($table, $fields, $keys_uniq=false, $key_ret=false) {
         return (integer)($database->getLastInsertId());
     }
     
-    if ($key_ret !== false) {
-        $fields = $r->fetchRow();
-        return (integer)($fields[$key_ret]);
+    if ($key_ret !== false) {
+
+        $fields = $r->fetchRow();
+
+        return (integer)($fields[$key_ret]);
+
     }
 }
 

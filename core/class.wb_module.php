@@ -53,12 +53,16 @@ class Addon {
         }
     }
 
-    function render($file_name, $fields) {
+    function render($file_name, $fields, $is_ret=false) {
         $fields = array_merge($fields, [
             'url_api'=>"url:'{$this->urlAPI}'",
+            'wb_url'=>WB_URL,
         ]);
 
-        echo $this->_twig->render($file_name, $fields);
+        $res = $this->_twig->render($file_name, $fields);
+
+        if ($is_ret) return $res;
+        echo $res;
     }
     
 }

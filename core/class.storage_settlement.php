@@ -12,8 +12,6 @@ class WbsStorageSettlement {
         $this->tbl_settlement_country =        " `".TABLE_PREFIX."mod_wbs_core_settlement_country`";
         $this->tbl_settlement_type =           " `".TABLE_PREFIX."mod_wbs_core_settlement_type`";
         $this->_tbl_settlement =               "".TABLE_PREFIX."mod_wbs_core_settlement";
-        
-        $this->iSettl = isset($_COOKIE['settlement']) ? preg_replace('/[^0-9]/', '', $_COOKIE['settlement']) : null;
     }
     
     public function getSettlements($sets, $only_count=null) {

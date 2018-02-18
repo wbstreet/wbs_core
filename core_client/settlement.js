@@ -13,48 +13,31 @@ function Settlement(settlement_id, sets) {
     
     sets = sets || [];
     
-    /* новый упрощённый способ */
-    if (sets['tag']) {
-        sets['name'] = sets['name'] || 'settlement_id';
-        
+    sets['name'] = sets['name'] || 'settlement_id';
+    
+    if (!sets['own_tag_inner']) {
         sets['tag'].innerHTML = `
         <input type="button" class="button_ss" value="Выбрать город">
         <input class='form_ss' type='text'>
         <div><div class="suggestions"></div></div>
         <input type="hidden" class='selected_settlement' name="`+sets['name']+`" value="" onchange="`+sets['onchange']+`">
         `;
-        sets['button_ss'] = sets['tag'].querySelector('.button_ss');
-        sets['form_ss'] = sets['tag'].querySelector('.form_ss')
-        sets['suggestions'] = sets['tag'].querySelector('.suggestions');
-        
-        sets['selected_settlement'] = sets['tag'].querySelector('.selected_settlement');
-        
-        sets['func_setSettlement'] = function (settlement_id, self) {
-            if (self.sets['selected_settlement']) self.sets['selected_settlement'].value = settlement_id;
-            sets['button_ss'].value = self.obj2full_name(self.id2settlementObj(settlement_id)) + " (ИЗМЕНИТЬ)";
-        }
-        
-    } else {
-        
-        // обязательные
-        sets['button_ss'] = sets['button_ss'];// || document.getElementById('button_ss');
-        sets['form_ss'] = sets['form_ss']//; || document.getElementById('form_ss');
-        sets['suggestions'] = sets['suggestions'];// || document.getElementById('suggestions');
-        // необязательные
-        sets['selected_settlement'] = sets['selected_settlement'] || document.getElementById('selected_settlement');
     }
+    sets['button_ss'] = sets['tag'].querySelector('.button_ss');
+    sets['form_ss'] = sets['tag'].querySelector('.form_ss')
+    sets['suggestions'] = sets['tag'].querySelector('.suggestions');
+    sets['selected_settlement'] = sets['tag'].querySelector('.selected_settlement');
     
-    sets['level'] = sets['level'] || 'settlement';
-    sets['title'] = sets['title'];// || document.getElementById('settlementTitle');
-    sets['set_in_init'] = sets['set_in_init'] === undefined || sets['set_in_init'] === null ? true : sets['set_in_init'];
-    // чтобы не переопределять функцию по умолчанию
+    sets['func_setSettlement'] = sets['func_setSettlement'] || function (settlement_id, self) {
+        if (self.sets['selected_settlement']) self.sets['selected_settlement'].value = settlement_id;
+        sets['button_ss'].value = self.obj2full_name(self.id2settlementObj(settlement_id)) + " (ИЗМЕНИТЬ)";
+    }
     sets['func_after_setSettlement'] = sets['func_after_setSettlement'] || function() {};
     
-    self.sets = sets;
+    sets['level'] = sets['level'] || 'settlement';
+    sets['set_in_init'] = sets['set_in_init'] === undefined || sets['set_in_init'] === null ? true : sets['set_in_init'];
     
-    sets['suggestions'].className += ' suggestions';
-    sets['form_ss'].className += ' form_ss';
-    sets['button_ss'].className += ' button_ss';
+    self.sets = sets;
     
     // по умолчанию - сохраняет город в куках
     this.setSettlement = sets['func_setSettlement'];

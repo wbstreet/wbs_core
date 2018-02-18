@@ -1,0 +1,12 @@
+.button_ss {cursor: pointer; position: relative;}
+.form_ss {display: none;}
+.suggestions {
+    display: none;
+    position:absolute;
+    width: calc(110% + 15px);
+    background: #faf143; text-align: left;
+    font-size: 10pt;
+    color: #0e283c;
+}
+.suggestions div {padding: 4px 5px 4px 5px; border-bottom: 1px solid #dfa4a4; cursor: pointer;}
+.suggestions div:hover {background:#ffe4e4;}

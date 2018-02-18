@@ -30,11 +30,13 @@ if (!class_exists('Agreement')) include(WB_PATH.'/modules/wbs_core/core/class.ag
 if (!class_exists('WbsEmail')) include(WB_PATH.'/modules/wbs_core/core/class.email.php');
 if (!class_exists('WbsStorageImg')) include(WB_PATH.'/modules/wbs_core/core/class.storage_img.php');
 if (!class_exists('WbsStorageVisitor')) include(WB_PATH.'/modules/wbs_core/core/class.storage_visitor.php');
+if (!class_exists('WbsStorageSettlement')) include(WB_PATH.'/modules/wbs_core/core/class.storage_settlement.php');
 
 $clsAgreemnt = new Agreement($database);
 $clsFilter = new FilterData();
 $clsStorageImg = new WbsStorageImg();
 $clsStorageVisitor = new WbsStorageVisitor();
+$clsStorageSettlement = new WbsStorageSettlement();
 
 if (!class_exists('wb')) include(WB_PATH.'/framework/class.wb.php');
 if (!isset($wb) || !($wb instanceof wb)) { $wb = new wb(); }

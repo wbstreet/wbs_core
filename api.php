@@ -56,6 +56,34 @@ if ($action=='get_agreement') {
 
     print_success('Письмо успешно отправлено!');
 
+} else if ($action == 'get_settlement') {
+
+    $id = preg_replace("/[^0-9]+/", '', $_POST['id']);
+    $level = $_POST['level'];
+
+    if ($level == 'settlement') $res = $clsStorageSettlement->getSettlements(['id'=>$id]);
+    else if ($level == 'region') $res = $clsStorageSettlement->getRegions(['id'=>$id, 'count_limit'=>$count]);
+
+    if (gettype($res) === 'string') print_error($res);
+    print_success('', ['data'=>$res->fetchRow()]);
+
+} else if ($action == 'get_suggestion') {
+
+    $level = $_POST['level'];
+    $text = $_POST['text'];
+    $count = preg_replace("/[^0-9]+/", '', $_POST['count']);
+
+    if ($level == 'settlement') $res = $clsStorageSettlement->getSettlements(['limit_count'=>$count, 'starts_with'=>$text]);
+    else if ($level == 'region') $res = $clsStorageSettlement->getRegions(['text'=>$text, 'count_limit'=>$count]);
+
+    if (gettype($res) == 'string') print_error($res);
+    $answer = [];
+    while ($r = $res->fetchRow()) {
+        $answer[] = $r;
+    }
+
+    print_success('', ['data'=>$answer]);
+s    
 } else {print_error('неверный api name');}
 
 ?>

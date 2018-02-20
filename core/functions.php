@@ -223,28 +223,41 @@ function share_page_link() {
     echo '</div>';
 }
 
-function calc_paginator($cur, $max) {
+function calc_paginator($page_num, $page_total) {
         
         $ON_SIDE = 3;
     $divs = [];
 
-        if ($cur!=1) $divs[] = ['1', 'url'];
-        if ($cur-$ON_SIDE > 2) $divs[] = ['...', 'text'];
+        if ($page_num!=1) $divs[] = ['1', 'url'];
+        if ($page_num-$ON_SIDE > 2) $divs[] = ['...', 'text'];
         
     for ($i=$ON_SIDE; $i>0; $i--) {
-        if ($cur-$i > 1) $divs[] = [$cur-$i, 'url'];
+        if ($page_num-$i > 1) $divs[] = [$page_num-$i, 'url'];
     }
 
-        $divs[] = [$cur, 'text'];
+        $divs[] = [$page_num, 'text'];
 
-        for ($i=$cur+1; $i<=$cur+$ON_SIDE; $i++) {
-            if ($i < $max) $divs[] = [$i, 'url'];
+        for ($i=$page_num+1; $i<=$page_num+$ON_SIDE; $i++) {
+            if ($i < $page_total) $divs[] = [$i, 'url'];
         }
 
-        if ($cur+$ON_SIDE < $max-1) $divs[] = ['...', 'text'];
-        if ($cur!=$max) $divs[] = [$max, 'url'];
+        if ($page_num+$ON_SIDE < $page_total-1) $divs[] = ['...', 'text'];
+        if ($page_num!=$page_total) $divs[] = [$page_total, 'url'];
         
         return $divs;
+}
+
+/*
+page_total - всего страниц
+obj_per_page - объектов на странице
+page_num - номер текущей страницы
+0bj_total - всего объектов
+*/
+function calc_paginator_and_limit($args, &$fields, $obj_total) {
+    $fields['limit_count'] = $args['obj_per_page'];
+    $fields['limit_offset'] = $args['obj_per_page'] * ($args['page_num'] - 1);
+    
+    return calc_paginator($args['page_num'], (int)($obj_total / $args['obj_per_page'])+1);
 }
 
 ?>

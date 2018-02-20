@@ -257,7 +257,9 @@ function calc_paginator_and_limit($args, &$fields, $obj_total) {
     $fields['limit_count'] = $args['obj_per_page'];
     $fields['limit_offset'] = $args['obj_per_page'] * ($args['page_num'] - 1);
     
-    return calc_paginator($args['page_num'], (int)($obj_total / $args['obj_per_page'])+1);
+    $page_total = ($obj_total / $args['obj_per_page']);
+
+    return calc_paginator($args['page_num'], $page_total > (int)$page_total ? (int)$page_total+1 : (int)$page_total);
 }
 
 ?>

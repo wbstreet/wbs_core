@@ -223,4 +223,28 @@ function share_page_link() {
     echo '</div>';
 }
 
+function calc_paginator($cur, $max) {
+        
+        $ON_SIDE = 3;
+    $divs = [];
+
+        if ($cur!=1) $divs[] = ['1', 'url'];
+        if ($cur-$ON_SIDE > 2) $divs[] = ['...', 'text'];
+        
+    for ($i=$ON_SIDE; $i>0; $i--) {
+        if ($cur-$i > 1) $divs[] = [$cur-$i, 'url'];
+    }
+
+        $divs[] = [$cur, 'text'];
+
+        for ($i=$cur+1; $i<=$cur+$ON_SIDE; $i++) {
+            if ($i < $max) $divs[] = [$i, 'url'];
+        }
+
+        if ($cur+$ON_SIDE < $max-1) $divs[] = ['...', 'text'];
+        if ($cur!=$max) $divs[] = [$max, 'url'];
+        
+        return $divs;
+}
+
 ?>

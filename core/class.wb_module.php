@@ -15,7 +15,7 @@ class Addon {
         $this->urlAPI = WB_URL."/modules/{$this->name}/api.php";
         if (! is_dir($this->pathMedia)) {mkdir($this->pathMedia, 0777, true);}
 
-        $loader = new Twig_Loader_Filesystem([$this->pathTemplates]);
+        $loader = new Twig_Loader_Filesystem([$this->pathTemplates, WB_PATH.'/modules/wbs_core/templates/']);
         $this->_twig = new Twig_Environment($loader);
         
     }

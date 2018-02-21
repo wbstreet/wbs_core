@@ -1,0 +1,16 @@
+{% macro paginator(divs, page_link, modPortalArgs) %}
+    <div style="text-align:center;">
+        {% for div in divs %}
+            {% if div[1] == 'url' %}
+                <a
+                    style="color:red"
+                    href="{{ page_link }}?page_num={{ div[0] }}"
+                    rel="{% if div[0] > modPortalArgs.page_num %}next{% elseif div[0] < modPortalArgs.page_num %}prev{% endif %}"
+                    onclick="set_params({page_num:'{{ div[0] }}'}); return false;"
+                >{{ div[0] }}</a>
+            {% elseif div[1] == 'text' %}
+                <span style="color:green">{{ div[0] }}</span>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endmacro %}

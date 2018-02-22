@@ -79,7 +79,7 @@ class WbsStorageVisitor {
         // сохраняем рефера
 
         //$referer = defined(ORG_REFERER) ? (ORG_REFERER !== null ? ORG_REFERER: '') : ($_SERVER['HTTP_REFERER'] ?? '');
-        $referer = ORG_REFERER !== null ? ORG_REFERER: '';
+        $referer = defined(ORG_REFERER) && ORG_REFERER !== null ? ORG_REFERER : $_SERVER['HTTP_REFERER'];
         list($referer, $is_error) = idn_decode($referer);
         $refer_id = $this->refer2id($referer);
         if (gettype($refer_id) == 'string') { return " -".$refer_id;}

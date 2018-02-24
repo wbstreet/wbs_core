@@ -299,10 +299,7 @@ function insert_row_uniq($table, $fields, $keys_uniq=false, $key_ret=false) {
     global $database;
 
     if ($keys_uniq === false) $keys_uniq = array_keys($fields);
-    //if ($keys_ret === false) $keys_ret = [];
-
-    if (gettype($keys_uniq) === 'string') $keys_uniq = [$eys_uniq];
-    //if (gettype($keys_ret) === 'string') $keys_ret = [$keys_ret];
+    if (gettype($keys_uniq) === 'string') $keys_uniq = [$keys_uniq];
 
     $select = $key_ret === false ? $keys_uniq : array_merge($keys_uniq, [$key_ret]);
 

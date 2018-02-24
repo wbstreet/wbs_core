@@ -310,19 +310,16 @@ function insert_row_uniq($table, $fields, $keys_uniq=false, $key_ret=false) {
     foreach($keys_uniq as $key) $where[$key] = $fields[$key];
 
     $r = select_row($table, glue_keys($select), glue_fields($where, ' AND '));
-    if (gettype($r) === 'string') return $r;
+    if (gettype($r) === 'string') return [$r, null];
     else if ($r === null) {
         $r = insert_row($table, $fields);
-        if (gettype($r) === 'string') return $r;
-        return (integer)($database->getLastInsertId());
+        if (gettype($r) === 'string') return [$r, null];
+        return [(integer)($database->getLastInsertId()), true];
     }
     
     if ($key_ret !== false) {
-
         $fields = $r->fetchRow();
-
-        return (integer)($fields[$key_ret]);
-
+        return [(integer)($fields[$key_ret]), false];
     }
 }
 

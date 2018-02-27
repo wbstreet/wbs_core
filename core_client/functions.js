@@ -45,14 +45,19 @@ function RA_raw(action, data, options) {
     RequestAction(action, options['url'], data, function() {
         if (this.readyState != 4) return;
         if (this.status==200) {
-	    var res = JSON.parse(del_casper(this.responseText));
+                    
+            var res = JSON.parse(del_casper(this.responseText));
             if (options['func_after']) options['func_after'](res);
-	    if (res['success'] == 1) {
-	       	if (options['func_success']) options['func_success'](res, options['arg_func_success']);
-	    } else {
-	        if (options['func_error']) options['func_error'](res, options['arg_func_error']);
-	    }
-	    if (res['location']) window.location = res['location'];
+                 
+            if (res['success'] == 1) {
+                if (options['func_success']) options['func_success'](res, options['arg_func_success']);
+            } else {
+                if (options['func_error']) options['func_error'](res, options['arg_func_error']);
+            }
+                  
+            if (res['location']) window.location = res['location'];
+            if (res['content']) options['content_tag'].innerHTML = res['content'];
+                  
         } else if (!navigator.onLine) {
             if (options['func_fatal']) options['func_fatal']('Нет соединения с Интернет');
         } else {

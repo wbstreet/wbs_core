@@ -65,32 +65,6 @@ class Addon {
         echo $res;
     }
 
-    function _getobj_order_limit($sets, $glue=true) {
-        $order = build_order($sets['order_by'] ?? null, $sets['order_dir'] ?? null);
-
-        if (isset($sets['limit_offset'])) $limit_offset = (integer)($sets['limit_offset']); else $limit_offset = null;
-        if (isset($sets['limit_count'])) $limit_count = (integer)($sets['limit_count']); else $limit_count = null;
-        $limit = build_limit($limit_offset, $limit_count);
-        
-        return $glue ? $order.' '.$limit : [$order, $limit];
-    }
-
-    function _getobj_return($sql, $only_count) {
-        global $database;
-
-        $r = $database->query($sql);
-        if ($database->is_error()) return $database->get_error();
-
-        if ($only_count) {
-            $count = $r->fetchRow()['count'];
-            return (integer)$count;
-        } else {
-            if ($r->numRows() === 0) return null;
-            return $r;
-        }
-
-    }
-    
 }
 
 ?>

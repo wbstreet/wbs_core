@@ -370,5 +370,72 @@ function insert_row_uniq_deletable($table, $fields, $keys_uniq, $key_ret) {
     return (integer)$id;
 }
 
+/* функции для конструирования функций-извлектаелей данных */
+
+function getobj_order_limit($sets, $glue=true) {
+    $order = build_order($sets['order_by'] ?? null, $sets['order_dir'] ?? null);
+
+    if (isset($sets['limit_offset'])) $limit_offset = (integer)($sets['limit_offset']); else $limit_offset = null;
+    if (isset($sets['limit_count'])) $limit_count = (integer)($sets['limit_count']); else $limit_count = null;
+    $limit = build_limit($limit_offset, $limit_count);
+    
+    return $glue ? $order.' '.$limit : [$order, $limit];
+}
+
+function getobj_return($sql, $only_count) {
+    global $database;
+
+    $r = $database->query($sql);
+    if ($database->is_error()) return $database->get_error();
+
+    if ($only_count) {
+        $count = $r->fetchRow()['count'];
+        return (integer)$count;
+    } else {
+        if ($r->numRows() === 0) return null;
+        return $r;
+    }
+
+}
+
+function getobj_search($sets, $keys) {
+    global $database;
+    
+    if (!isset($sets['find_str']) || $sets['find_str'] === null) return null;
+
+    $s = str_replace('%', '\%', $database->escapeString($sets['find_str']));
+    $s_in = isset($sets['find_in']) && $sets['find_in'] ? explode(',', $sets['find_in']) : [];
+    if (count($s_in) === 0) $s_in = array_keys($keys);
+
+    $where_find = [];
+    foreach($s_in as $i => $key) {
+        if (!isset($keys[$key])) continue;
+        $where_find[] = $keys[$key]." LIKE '%$s%'";
+    }
+    
+    return '('.implode(' OR ', $where_find).')';
+}
+
+function get_obj($tables, $where, $where_opts, $where_find=[], $sets=[], $only_count=false) {
+        global $database;
+        
+        $where_find = getobj_search($sets, $where_find);
+        if ($where_find) $where[] = $where_find;
+        
+        foreach($where_opts as $opt=>$key) {
+                if (isset($sets[$opt])) $where[] = $key."=".process_value($sets[$opt]);
+        }
+
+        $select = $only_count ? "COUNT(*) AS count" : "*";
+        $tables = implode(',', $tables);
+        $where = implode(' AND ', $where);
+        $order_limit = getobj_order_limit($sets);
+        
+        $sql = "SELECT $select FROM $tables WHERE $where $order_limit";
+        
+        //echo "<script>console.log(`".htmlentities($sql)."`);</script>";
+        
+        return getobj_return($sql, $only_count);
+}
 
 ?>

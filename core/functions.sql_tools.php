@@ -334,15 +334,17 @@ function insert_row_uniq_deletable($table, $fields, $keys_uniq, $key_ret) {
 
     // проверяем наличие дубля
 
-    if ($keys_uniq === false) $keys_uniq = array_keys($fields);
-    if (gettype($keys_uniq) === 'string') $keys_uniq = [$keys_uniq];
+    if ($keys_uniq !== null) {
+        if ($keys_uniq === false) $keys_uniq = array_keys($fields);
+        if (gettype($keys_uniq) === 'string') $keys_uniq = [$keys_uniq];
 
-    $where = ["`is_deleted`"=>'0'];
-    foreach($keys_uniq as $key) $where[$key] = $fields[$key];
+        $where = ["`is_deleted`"=>'0'];
+        foreach($keys_uniq as $key) $where[$key] = $fields[$key];
 
-    $r = select_row($table, process_key($key_ret), glue_fields($where, ' AND ')." LIMIT 1");
-    if (gettype($r) === 'string') return $r;
-    else if ($r !== null) return 'Уже существует!';
+        $r = select_row($table, process_key($key_ret), glue_fields($where, ' AND ')." LIMIT 1");
+        if (gettype($r) === 'string') return $r;
+        else if ($r !== null) return 'Уже существует!';
+    }
 
     // Если дублей нет, то проверяем наличие удалённых записей
 

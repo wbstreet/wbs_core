@@ -485,7 +485,7 @@ function ZIndex(start_index) {
 	this.add = function(el, level) {
 		self._add(el, level);
         el.addEventListener('mousedown', self.ev_to_top);
-        el.addEventListener('touchstart', self.ev_to_top);
+        el.addEventListener('touchstart', self.ev_to_top, {passive:true});
 	};
 	this.remove = function(el, level) {
 	    self.els.splice(parseInt(el.style.zIndex), 1);
@@ -856,5 +856,5 @@ function DND(element, options) {
     
     var _dnd = dnd;
     element.addEventListener('mousedown', _dnd); // для мыши
-    element.addEventListener('touchstart', _dnd); // для сенсорного дисплея
+    element.addEventListener('touchstart', _dnd, {passive:true}); // для сенсорного дисплея
 }

@@ -83,7 +83,8 @@ function Window() {
                 class_body: null,
                 class_window: null,
                 text_title: 'Без названия',
-                body_content: undefined
+                body_content: undefined,
+                body_content_url: undefined
     };
 
     this.createBodyByClone = function(idBody) {
@@ -145,8 +146,21 @@ function Window() {
             }
             self.count_open_total += 1;
 
-        // создаём окно
         var w = self.createWindow(idBody, options['create_method'], options['body_content']);
+
+        // загружаем тело
+        if (options['body_content_url'] !== undefined) {
+            RA_raw('', {}, {
+                'func_success': function(res, w) {
+                    W.wbody_html(w, res.message);
+                },
+                'url': options['body_content_url'],
+                'arg_func_success': w,
+                'not_json':true
+            });
+        }
+        
+        // создаём окно
         self.count_open_total += 1;
             w.id = self.count_open_total + w.id;
             self.arrData[w.id] = {};

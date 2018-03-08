@@ -30,7 +30,9 @@ function Settlement(settlement_id, sets) {
     
     sets['func_setSettlement'] = sets['func_setSettlement'] || function (settlement_id, self) {
         if (self.sets['selected_settlement']) self.sets['selected_settlement'].value = settlement_id;
-        sets['button_ss'].value = self.obj2full_name(self.id2settlementObj(settlement_id)) + " (ИЗМЕНИТЬ)";
+        self.id2settlementObj(settlement_id, {'func_success': function(res){
+            sets['button_ss'].value = self.obj2full_name(res['data']) + " (ИЗМЕНИТЬ)";
+        }});
     }
     sets['func_after_setSettlement'] = sets['func_after_setSettlement'] || function() {};
     
@@ -53,13 +55,11 @@ function Settlement(settlement_id, sets) {
         return full_name;
     }
     
-    this.id2settlementObj = function(id) {
+    this.id2settlementObj = function(id, options) {
         if (id === undefined || id === null) return [];
-        req = RequestAction('get_settlement', undefined, {'id': id, 'level':sets['level']});
-        req = JSON.parse(req.responseText);
-        if (req['success'] == 0) console.log(req['message']);
-        return req['data'];
-    }       
+        if (options.func_error === undefined) options.func_error =  function(res) {console.log(res['message'])};
+        var req = RA_raw('get_settlement', {'id': id, 'level':sets['level']}, options);
+    }
     
     this.get_suggestion = function(text, count) {
         function get_row(textContent, id, click) {

@@ -46,7 +46,12 @@ function RA_raw(action, data, options) {
         if (this.readyState != 4) return;
         if (this.status==200) {
                     
-            var res = JSON.parse(del_casper(this.responseText));
+
+            var res = del_casper(this.responseText);
+            if (options['not_json']) {
+                res = {success:1, message:res};
+            } else res = JSON.parse(res);
+
             if (options['func_after']) options['func_after'](res);
                  
             if (res['success'] == 1) {
@@ -773,16 +778,19 @@ function content_by_api(api, tag, options) {
     options['func_after_insert'] = options['func_after_insert'] === undefined ? function() {} : options['func_after_insert']; 
     
     RA_raw(api, options['data'], {
-	    func_after_load: function(res) {
-    		if (options['is_escape_content']) tag.text_content = res['message'];
-    		else tag.innerHTML = res['message'];
-    		options['func_after_insert']();
-    		run_inserted_scripts(tag);
-	    },
-    	func_fatal: function(err_text) {
-            tag.text_content = err_text;
-    	},
-    	url: options['url']
+        func_after_load: function(res) {
+            if (!options['not_insert_empty']) {
+                if (!res['message']) return;
+            }
+            if (options['is_escape_content']) tag.text_content = res['message'];
+           else tag.innerHTML = res['message'];
+           options['func_after_insert']();
+           run_inserted_scripts(tag);
+        },
+        func_fatal: function(err_text) {
+            if (!options['not_insert_empty']) tag.text_content = err_text;
+        },
+        url: options['url']
     });
 }
 

@@ -37,15 +37,7 @@ function _Window() {
     this.get_wtitle = function(w) { return w.querySelector('.windowTitle'); };
     this.get_wbody = function(w) { return w.querySelector('.windowBody'); };
         this.get_w = function(child_el) {
-        //return child_el.closest(".windowWindow");
-
-                //if (child_el.closest) return child_el.closest(c);
-                // for old browsers;
-            //if (child_el.className == "windowWindow") {return child_el;}
-            //else {return self.get_w(child_el.parentElement);}
-
-            return $(child_el).closest(".windowWindow")[0];
-            //return dt.closest(child_el, ".windowWindow");
+        return child_el.closest(".windowWindow");
         };
 
         this.get_data = function(w) { return self.arrData[w.id]; }
@@ -73,7 +65,6 @@ function Window() {
     this.zi = (typeof ZIndex != 'undefined' && typeof zi != 'undefined' && zi instanceof ZIndex) ? zi : null;
 
     this.default_options = {
-                create_method: 'clone',
                 position: 'center',
                 max_count: false,
                 add_sheet: false,
@@ -87,31 +78,17 @@ function Window() {
                 body_content_url: undefined
     };
 
-    this.createBodyByClone = function(idBody) {
-            var wbody = document.getElementById(idBody).cloneNode(true);
-            return wbody;
-    }
-
-    this.createBodyByCreate = function(idBody) {
-            var wbody = document.createElement('div');
-            wbody.id = idBody;
-            wbody.className = 'windowBody';
-            return wbody;
-    }
-
-    this.createWindow = function(idBody, method, replaceContentBody) {
-        method = method || 'clone';
+    this.createWindow = function(idBody, replaceContentBody) {
         replaceContentBody = replaceContentBody || undefined;
 
         var wbody, w = self._w.cloneNode(true);
         // Создание тела
-        if (method == 'clone') { // берём готовое тело
-            wbody = self.createBodyByClone(idBody);
-        } else if (method == 'create') { // создаём пустое тело
-            wbody = self.createBodyByCreate(idBody);
-        } else if (method == 'auto') { // если готового тела нет, то создваём пустое, иначе берём готовое.
-            if (document.getElementById(idBody)) wbody = self.createBodyByClone(idBody);
-            else { wbody = self.createBodyByCreate(idBody); }
+        if (document.getElementById(idBody)) { // берём готовое тело
+            wbody = document.getElementById(idBody).cloneNode(true);
+        } else { // создаём пустое тело
+            wbody = document.createElement('div');
+            wbody.id = idBody;
+            wbody.className = 'windowBody';
         }
 
         if (!wbody.classList.contains('windowBody')) {wbody.classList.add('windowBody'); console.log('У тела окна должен быть установлен класс "windowBody"! Проверьте имя класса у тела с id = "'+idBody+'"!');}
@@ -127,7 +104,7 @@ function Window() {
                 arg_options = arg_options || {};
 
         // получение опций из тела окна
-        if (arg_options['create_method'] == 'clone' && document.getElementById(idBody)) var wbody_options = document.getElementById(idBody).dataset;
+        if (document.getElementById(idBody)) var wbody_options = document.getElementById(idBody).dataset;
         else var wbody_options = {};
 
         // установка опций
@@ -146,7 +123,7 @@ function Window() {
             }
             self.count_open_total += 1;
 
-        var w = self.createWindow(idBody, options['create_method'], options['body_content']);
+        var w = self.createWindow(idBody, options['body_content']);
 
         // загружаем тело
         if (options['body_content_url'] !== undefined) {
@@ -167,11 +144,6 @@ function Window() {
 
         if (!options['add_title']) self.get_wtitle(w).style.display = 'none';
 
-        // устанавливаем опцию заголовка
-        //var wbody = self.get_wbody(w);
-        //if (options['text_title'] === undefined && wbody.dataset.text_title !== undefined) options['text_title'] = wbody.dataset.text_title;
-        //else options['text_title'] = 'Без названия';
-        
             // добавляем событие drag'n'drop
             var wtitle = self.get_wtitle(w);
             DND(wtitle, {
@@ -327,22 +299,12 @@ function AdvancedWindow() {
         
         this.open_by_api = function(api, options) {
                 options = options || [];
-                options['create_method'] = 'create';
                 options['body_content'] = 'Загрузка...';
         options['data'] = options['data'] || {};
                 var text_title = options['text_title'];
                 var w = self.open(api, options);
                 if (w === false) return;
                 
-                //get_tab_content('windows', api, {}, {backup:false, tag_content:w.get_wbody(w)});
-
-/*      sets['data'] = data;
-        sets['type'] = 'POST';
-        $.ajax(this.mod_url + 'api.php', {
-                type: 'POST',
-                data: option['data']
-        });*/
-
             RA_raw(api, options['data'], {
                     func_after_load: function(res) {
                         self.wbody_html(w, res['message']);

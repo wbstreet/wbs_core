@@ -361,58 +361,9 @@ function AdvancedWindow() {
 
 var W = new AdvancedWindow();
 
-function Coords(el) {
-        var self = this;
-
-        this.x_page = function() {
-                
-        }
-        this.x_window = function() {
-                
-        }
-        this.x_screen = function() {
-                
-        }
-        this.y_page = function() {
-                
-        }
-        this.y_window = function() {
-                
-        }
-        this.y_screen = function() {
-                
-        }
-        this.height = function() {
-                
-        }
-        this.width = function() {
-                
-        }
-
-        this.page_height = function() {
-                
-        }
-        this.page_width = function() {
-                
-        }
-        this.screen_height = function() {
-                return screen.height;
-        }
-        this.screen_width = function() {
-                return screen.width;
-        }
-        this.window_height = function() {
-                return screen.availHeight;
-        }
-        this.window_width = function() {
-                return screen.availWidth;
-        }
-        
-}
-
 /* --------------------------------
  *           Gallery
- - *-------------------------------*/
+ *-------------------------------*/
 
 "use strict"
 

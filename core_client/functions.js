@@ -567,20 +567,6 @@ function ContextMenu(id, items) {
     init();
 }
 
-function open_edit_page_window() {
-	var w = W.open('edit_page_window', {text_title:'Редактирование страницы'});
-	var context_menu_items = [['Редактировать'], ['Оформление'], ['Переместить', function(e, cm) {
-	   		cm.pe.start_selecting_vacant();
-	   		//console.log('Щёлкнули на: ', cm.target_el);
-	   	}]];
-	pe = new PageEditor(
-		document.querySelector('.pm_rows'),
-		w.querySelector('#module_icons'),
-        {btn_save: w.querySelector('#module_icons-btn_save')},
-		context_menu_items
-	);
-}
-
 /**
  * Запускает скрипты в коде html, вставленнном в страницу.
  */
@@ -700,49 +686,6 @@ function clear_pager(offset, count, nav) {
 	
 };
 
-function show_pager(cur, max, func_url, nav) {
-	
-	var ON_SIDE = 3;
-	if (nav === undefined) nav = document.getElementById('bottom');
-    var divs = [
-    	['1', 'url'],
-    	[cur, 'text'],
-    	[max, 'url']
-    ];
-
-	for (var i=cur-1; i>=cur-ON_SIDE; i--) {
-		if (i<=1) continue;
-		divs.splice(1, 0, [i, 'url']);
-	}
-
-	if (cur==1) divs.splice(0, 1);
-	if (cur-ON_SIDE > 2) divs.splice(1, 0, ['...', 'text']);
-
-	for (var i=cur+1; i<=cur+ON_SIDE; i++) {
-		if (i>=max) continue;
-		divs.splice(-1, 0, [i, 'url']);
-	}
-	
-	if (cur+ON_SIDE < max-1) divs.splice(-1, 0, ['...', 'text']);
-	if (cur==max) divs.splice(-1, 1);
-
-    var url, div, textContent;
-    for (var i=0; i<divs.length; i++) {
-		//var div = document.createElement('div'); div.style.marginRight = '5px';
-
-    	//if (divs[i][1] == 'url') div.innerHTML = "<a href='"+func_url(divs[i][0])+"'>"+divs[i][0]+"</a>";
-    	//else if (divs[i][1] == 'text') {div.textContent = divs[i][0]; div.style.background = '#ffffff'; div.style.color = '#ca0c11';}
-
-		var div = document.createElement('a'); div.style.marginRight = '5px';
-        div.textContent = divs[i][0]; div.className = 'num_page';
-
-    	if (divs[i][1] == 'url') { div.href = func_url(divs[i][0]); }
-    	else if (divs[i][1] == 'text') {div.style.background = '#ffffff'; div.style.color = '#ca0c11';}
-
-    	nav.appendChild(div);
-    }
-
-};
 /* конец паджинатора */
 
 function show_image(input, img) {

@@ -289,6 +289,10 @@ function Window() {
                 } else if (position == 'random') {
             w.style.left = (5+Math.random()*6)+"%";
             w.style.top  = (30+Math.random()*3)+"%";
+                } else if (typeof position == 'object') {
+                    console.log(position);
+                    w.style.left = position[0]+'px';
+                    w.style.top  = position[1]+'px';
                 }
         }
 }

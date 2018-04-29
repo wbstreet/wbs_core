@@ -17,13 +17,13 @@ Date: 2015 - 2017 years
 13.04.2017 - Перенесён расшиернный класс окна из Инфо.РФ. При открытии окна можно задать опцию url.
 */
 
-function _getCoords(elem) { // кроме IE8-  // утащено отсюда --> https://learn.javascript.ru/coordinates-document#getCoords. Очень благодарен указаному сайту, так почти всегда обращаюсь к нему. Иногда - сайт Мозиллы.
+/*function _getCoords(elem) { // кроме IE8-  // утащено отсюда --> https://learn.javascript.ru/coordinates-document#getCoords. Очень благодарен указаному сайту, так почти всегда обращаюсь к нему. Иногда - сайт Мозиллы.
     var box = elem.getBoundingClientRect();
     return {
         top: box.top + pageYOffset*0,    // помножили на ноль значение того, на сколько прокрученав странца. Если убрать ноль, то вместо позиции на окне будет указана позиция на странице.
         left: box.left + pageXOffset*0
     };
-}
+}*/
 
 function _Window() {
         var self = this;
@@ -148,14 +148,14 @@ function Window() {
             var wtitle = self.get_wtitle(w);
             DND(wtitle, {
                 down: function(e, data) {
-                            if (data['isSensorDisplay']) e = e.touches[0];
-                // необязательны, без них курсор будет смещаться к углу захватываемого объекта
-                            data['shiftX'] = e.clientX - _getCoords(data['wtitle']).left; 
-                            data['shiftY'] = e.clientY - _getCoords(data['wtitle']).top;
-                            if (self.zi) self.zi.lift(data['w'], 'top')
+                    if (data['isSensorDisplay'] && e.touches) e = e.touches[0];
+                    // необязательны, без них курсор будет смещаться к углу захватываемого объекта
+                    data['shiftX'] = e.clientX - data['wtitle'].getBoundingClientRect().left; 
+                    data['shiftY'] = e.clientY - data['wtitle'].getBoundingClientRect().top;
+                    if (self.zi) self.zi.lift(data['w'], 'top')
                 },
                 move: function(e, data) {
-                        if (data['isSensorDisplay']) e = e.touches[0];
+                    if (data['isSensorDisplay'] && e.touches) e = e.touches[0];
                         var left = e.clientX - data['shiftX'];
                         var top = e.clientY - data['shiftY'];
                         var screen_width  = document.documentElement.clientWidth-parseInt(getComputedStyle(data['wtitle']).width);
@@ -271,30 +271,22 @@ function Window() {
             else {return wbody.innerHTML;}
     };
         
-        this.calc_position = function(w, position) {
-                if (position == 'center') {
-
-                    var w_height = parseInt(getComputedStyle(w).height);
-                    var client_height = document.documentElement.clientHeight;
-                    var top = (client_height - w_height) / 2;
-                    top = top >= 0 ? top : 0 ;
-                    w.style.top = top+"px";
-                
-                    var w_width = parseInt(getComputedStyle(w).width);
-                    var client_width = document.documentElement.clientWidth;
-                    var left = (client_width - w_width) / 2;
-                    left = left >= 0 ? left : 0 ;
-                    w.style.left = left+"px";
-
-                } else if (position == 'random') {
+    this.calc_position = function(w, position) {
+        if (position == 'center') {
+            var left = (document.documentElement.clientWidth - parseInt(getComputedStyle(w).width)) / 2;
+            var top = (document.documentElement.clientHeight - parseInt(getComputedStyle(w).height)) / 2;
+            w.style.left = (left >= 0 ? left : 0)+"px";
+            w.style.top = (top >= 0 ? top : 0)+"px";
+        } else if (position == 'random') {
             w.style.left = (5+Math.random()*6)+"%";
             w.style.top  = (30+Math.random()*3)+"%";
-                } else if (typeof position == 'object') {
-                    console.log(position);
-                    w.style.left = position[0]+'px';
-                    w.style.top  = position[1]+'px';
-                }
+        } else if (typeof position == 'object') {
+            var left = position[0] > document.documentElement.clientWidth -  position[0] ? position[0] - parseInt(getComputedStyle(w).width) :  position[0];
+            var top =  position[1] > document.documentElement.clientHeight - position[1] ? position[1] - parseInt(getComputedStyle(w).height) : position[1];
+            w.style.left = left+'px';
+            w.style.top  = top+'px';
         }
+    }
 }
 
 function AdvancedWindow() {

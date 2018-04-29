@@ -158,8 +158,8 @@ function showNotification(message, _type, time) {
     note.className = 'notification';
     note.innerHTML = message;//note.appendChild(document.createTextNode(message));
     notes.appendChild(note);
-    zi.add(notes, 'top');
-    setTimeout(function(){zi.remove(note);note.remove();}, time);
+    if (typeof zi !== 'undefined')zi.add(notes, 'top');
+    setTimeout(function(){if (typeof zi !== 'undefined')zi.remove(note);note.remove();}, time);
 }
 
 function RA_Notification(action, data, func_success, options) {
@@ -180,26 +180,6 @@ function RA_Notification(action, data, func_success, options) {
     	func_after: options['func_after'],
         wb_captcha_img: options['wb_captcha_img']
     })
-}
-
-// for checkboxes and [radio]
-function set_checkbox(checkboxes, values) {
-	// form = document.forms['имя формы']; checkboxes = form['имя флажков'];
-	for (var i=0; i< checkboxes.length; i++ ) {
-		var cb = checkboxes[i];
-    	if (values.indexOf(cb.value) == -1) continue;
-    	cb.checked = true;
-	}
-}
-
-function get_checkbox(checkboxes) {
-	var checkboxes_arr = [];
-	for (var i=0; i< checkboxes.length; i++ ) {
-		var cb = checkboxes[i];
-		if (!cb.checked) continue;
-		checkboxes_arr[checkboxes_arr.length] = cb.value;
-    }
-    return checkboxes_arr;
 }
 
 function FormTools() {}
@@ -412,7 +392,7 @@ function sendform(button, action, options) {
 	options['func_success'] = options['func_success'] || options['func_after_success'];
 
     // получаем форму, если указана
-    if (options['form'] === undefined) {
+        if (options['form'] === undefined && button) {
     	if (button.form != null && button.form != undefined) options['form'] = button.form;
     	else if (button.closest('form') != null && button.closest('form') != undefined) options['form'] = button.closest('form');
     }
@@ -771,33 +751,33 @@ function wb_captcha_reload(img){
 
 
 function DND(element, options) {
+    function end(e) {
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', end);
+        document.removeEventListener('touchmove', move);
+        document.removeEventListener('toucend', end);
+        document.body.onmousedown = function() {return true;}; // включаем  выделение текста
+        if (options['up']) options['up'](e, options['data']);
+    }
+    
+    function move(e) {
+        if (options['move']) options['move'](e, options['data']);
+    }
+
     function dnd(e) { // drag and drop
-        e.currentTarget.ondragstart = function() {return false;};
+        e.currentTarget.ondragstart = function() {return false;}; // выключаем стандартный drag-n-drop
         document.body.onmousedown = function() {return false;}; // выключаем  выделение текста
         options['data'] = options['data'] || {};
         options['data']['isSensorDisplay'] = e.touches === undefined ? false : true
         
         if (options['down']) options['down'](e, options['data']);
         
-        function end(e) {
-            document.removeEventListener('mousemove', move);
-            document.removeEventListener('mouseup', end);
-            document.removeEventListener('touchmove', move);
-            document.removeEventListener('toucend', end);
-            document.body.onmousedown = function() {return true;}; // включаем  выделение текста
-            if (options['up']) options['up'](e, options['data']);
-        }
-        
-        function move(e) {
-            if (options['move']) options['move'](e, options['data']);
-        }
         document.addEventListener('mousemove', move);
         document.addEventListener('mouseup',  end);
         document.addEventListener('touchmove', move);
         document.addEventListener('touchend', end);
     }
     
-    var _dnd = dnd;
-    element.addEventListener('mousedown', _dnd); // для мыши
-    element.addEventListener('touchstart', _dnd, {passive:true}); // для сенсорного дисплея
+    element.addEventListener('mousedown', dnd); // для мыши
+    element.addEventListener('touchstart', dnd, {passive:true}); // для сенсорного дисплея
 }

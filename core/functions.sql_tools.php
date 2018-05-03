@@ -202,7 +202,7 @@ function build_insert($table, $fields, $value_lines=false) {
         $keys = glue_keys($fields);
                 $_value_lines = [];
         foreach($value_lines as $values) {
-                $values = "(".glue_keys($values).")";
+                $_value_lines[] = "(".glue_values($values).")";
         }
         $value_lines = implode(',', $_value_lines);
     } else {

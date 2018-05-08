@@ -75,6 +75,7 @@ function RA_raw(action, data, options) {
 
 function show_button_message(button, message, timeout) {
     var process;
+    if (!button) return;
     if (button.nextSibling === null || button.nextSibling.className != 'RA_ButtonProgress') {
         process = document.createElement('span');
         process.style.marginLeft = '10px';
@@ -87,11 +88,18 @@ function show_button_message(button, message, timeout) {
 }
 
 function animate_element(el, name) {
-   	el.classList.add(name);
-   	setTimeout(function() {el.classList.remove(name);}, 600);
+    if (!el) return;
+    el.classList.add(name);
+    setTimeout(function() {el.classList.remove(name);}, 600);
 }
 
 function light_absent_fields(form, absent_fields) {
+    if (!form) return;
+    if (form.tagName !== 'FORM') {
+        if (form.form) form = form.form;
+        else from = form.closest(form);
+    }
+        
 	var i, field;
 /*	for (i = 0; i<absent_fields.length; i++) {
 		field = absent_fields[i];
@@ -120,13 +128,13 @@ function RA_ButtonProgress(action, data, button, sending_text, func_success, opt
     	func_success: function(res) {
             var timeout = res['timeout'] !== undefined ? res['timeout'] : 3000 ;
             show_button_message(button,  res['message'], timeout);
-            light_absent_fields(button.form, []) // уберём красноту с полей, если они до этого были неверными.
+            light_absent_fields(button, []) // уберём красноту с полей, если они до этого были неверными.
             if (func_success) func_success(res, options['arg_func_success']);
     	},
     	func_error: function(res) {
             show_button_message(button, 'ошибка: '+res['message']);
             animate_element(button, 'btn-err')
-            if (res['absent_fields'] !== undefined) light_absent_fields(button.form, res['absent_fields']);
+            if (res['absent_fields'] !== undefined) light_absent_fields(button, res['absent_fields']);
             if (options['func_error']) options['func_error'](res, options['arg_func_error']);
     	},
     	func_fatal: function(res) {

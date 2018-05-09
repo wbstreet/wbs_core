@@ -262,4 +262,8 @@ function calc_paginator_and_limit($args, &$fields, $obj_total) {
     return calc_paginator($args['page_num'], $page_total > (int)$page_total ? (int)$page_total+1 : (int)$page_total);
 }
 
+function curtime($format='Y-m-d H:i:s') {
+        return date($format, time()+DEFAULT_TIMEZONE);
+}
+
 ?>

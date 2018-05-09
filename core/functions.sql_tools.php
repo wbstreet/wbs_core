@@ -416,6 +416,11 @@ function getobj_search($sets, $keys) {
     return '('.implode(' OR ', $where_find).')';
 }
 
+/*
+ * array $tables - tables
+ * array $where - strings of where expressions (they will be concatenate with 'AND')
+ * assoc array $where_opts - 
+*/
 function get_obj($tables, $where, $where_opts, $where_find=[], $sets=[], $only_count=false) {
         global $database;
         

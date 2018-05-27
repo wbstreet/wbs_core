@@ -302,6 +302,7 @@ function createAccessFile($obj_id, $new_name, $old_name, $page_id, $section_id, 
     }
     
     // создаём новый файл
+    if (file_exists($sObjPath)) return [false, $obj_link];
     
       $backSteps = preg_replace('@^'.preg_quote(WB_PATH).'@', '', $sObjsDir);
       $backSteps = str_repeat( '../', substr_count($backSteps, '/'));

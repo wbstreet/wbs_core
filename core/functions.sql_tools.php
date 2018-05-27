@@ -315,7 +315,7 @@ function insert_row_uniq($table, $fields, $keys_uniq=false, $key_ret=false) {
     }
     
     if ($key_ret !== false) {
-        $fields = $r->fetchRow();
+        $fields = $r->fetchRow(MYSQLI_ASSOC);
         return [(integer)($fields[$key_ret]), false];
     }
 }
@@ -359,7 +359,7 @@ function insert_row_uniq_deletable($table, $fields, $keys_uniq, $key_ret) {
 
     } else { // если есть удалённые, то обновляем
 
-        $id = $r->fetchRow()[$key_ret];
+        $id = $r->fetchRow(MYSQLI_ASSOC)[$key_ret];
         $fields['is_deleted'] = '0';
         
         $r = update_row($table, $fields, process_key($key_ret)."=".process_value($id));
@@ -389,7 +389,7 @@ function getobj_return($sql, $only_count) {
     if ($database->is_error()) return $database->get_error();
 
     if ($only_count) {
-        $count = $r->fetchRow()['count'];
+        $count = $r->fetchRow(MYSQLI_ASSOC)['count'];
         return (integer)$count;
     } else {
         if ($r->numRows() === 0) return null;

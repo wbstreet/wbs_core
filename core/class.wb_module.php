@@ -15,9 +15,9 @@ class Addon {
         $this->urlAPI = WB_URL."/modules/{$this->name}/api.php";
         if (! is_dir($this->pathMedia)) {mkdir($this->pathMedia, 0777, true);}
 
-        $loader = new Twig_Loader_Filesystem([$this->pathTemplates, WB_PATH.'/modules/wbs_core/templates/']);
-        $this->_twig = new Twig_Environment($loader);
-        
+        $loader = new Twig_Loader_Filesystem([$this->pathTemplates, WB_PATH.'/modules/wbs_core/templates/']);
+        $this->loader_chain = new Twig_Loader_Chain([$loader]);
+        $this->_twig = new Twig_Environment($this->loader_chain);
     }
     
     function getUrlAction($action) {
@@ -53,6 +53,8 @@ class Addon {
         }
     }
 
+    /* Functions for Twig */
+    
     function render($file_name, $fields, $is_ret=false) {
         $fields = array_merge($fields, [
             'url_api'=>"url:'{$this->urlAPI}'",
@@ -63,6 +65,13 @@ class Addon {
 
         if ($is_ret) return $res;
         echo $res;
+    }
+    
+    function add_loader($type, $data) {
+        $loader = null;
+        if ($type=="filesystem") $loader = new Twig_Loader_Filesystem($data);
+        else if ($type=="array") $loader = new Twig_Loader_Array($data);
+        $this->loader_chain->addLoader($loader);
     }
 
 }

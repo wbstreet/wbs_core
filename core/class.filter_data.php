@@ -88,6 +88,7 @@ class FilterData extends _FilterData {
     // new
 
 	public function set_obj($obj) {$this->obj = $obj;}
+        public function get_obj() {return $this->obj;}
     public function get_error($options=null) {
     	if ($options === null) $options = [];
     	if (!isset($options['sep'])) $options['sep'] = '<br>';
@@ -159,8 +160,11 @@ class FilterData extends _FilterData {
 	}
 
 	public function f2($obj, $prop_name, $filters, $type, $default=null) {
-		$this->set_obj($obj);
-		return $this->f($prop_name, $filters, $type, $default);
+                $temp = $this->get_obj();
+                $this->set_obj($obj);
+                $r = $this->f($prop_name, $filters, $type, $default);
+                $this->set_obj($temp);
+                return $r;
 	}
 	
 	

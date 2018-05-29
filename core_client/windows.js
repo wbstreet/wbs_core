@@ -272,6 +272,7 @@ function Window() {
     };
         
     this.calc_position = function(w, position) {
+        w = self.get_w(w);
         if (position == 'center') {
             var left = (document.documentElement.clientWidth - parseInt(getComputedStyle(w).width)) / 2;
             var top = (document.documentElement.clientHeight - parseInt(getComputedStyle(w).height)) / 2;

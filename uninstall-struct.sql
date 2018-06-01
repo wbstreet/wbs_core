@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_templates_of_letter`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_templates_of_letter_sended`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_img`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_any_settlement`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_country`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_rayon`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_region`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_type`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_visitor`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_visitor_browser`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_visitor_refer`;

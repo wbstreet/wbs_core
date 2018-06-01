@@ -373,7 +373,10 @@ function insert_row_uniq_deletable($table, $fields, $keys_uniq, $key_ret) {
 /* функции для конструирования функций-извлектаелей данных */
 
 function getobj_order_limit($sets, $glue=true) {
-    $order = build_order($sets['order_by'] ?? null, $sets['order_dir'] ?? null);
+    $order = build_order(
+        isset($sets['order_by']) ? $sets['order_by'] : null,
+        isset($sets['order_dir']) ? $sets['order_dir'] : null
+    );
 
     if (isset($sets['limit_offset'])) $limit_offset = (integer)($sets['limit_offset']); else $limit_offset = null;
     if (isset($sets['limit_count'])) $limit_count = (integer)($sets['limit_count']); else $limit_count = null;

@@ -116,6 +116,19 @@ class WbsEmail {
     	return true;
     }
 
+    function delete_template($name) {
+        global $database;
+
+        $sql2 = build_select($this->tbl_templates_of_letter, "`letter_template_id`", "`letter_template_name`=".process_value($name));
+        $sql = build_delete($this->tbl_templates_of_letter_sended, "`letter_template_id`=(".$sql2.")");
+        if (!$database->query($sql)) return $database->get_error();
+
+        $sql = build_delete($this->tbl_templates_of_letter, "`letter_template_name`=".process_value($name));
+        if (!$database->query($sql)) return $database->get_error();
+
+        return true;
+    }
+    
     function get_letters($sets=[]) {
         global $database, $sql_builder;
         if (isset($sets['letter_id'])) $letter_id = get_number($sets['letter_id']); else $letter_id = null;
@@ -166,7 +179,7 @@ class WbsEmail {
 	if ($r === null) return 'Шаблон письма не найден';
 	$r = $r->fetchRow();
 
-	$_vars = [];
+	/*$_vars = [];
 	foreach ($vars as $name => $value) {
 		$_vars['{{'.strtoupper($name).'}}'] = $value;
 	}
@@ -174,6 +187,12 @@ class WbsEmail {
 
         // отправляем письмо
 	return $this->send($to, $body, $r['letter_template_subject'], $r['letter_template_id'], $save_backup);
+	*/
+	$loader = new Twig_Loader_Array(['body'=>$r['letter_template_body'], 'subject'=>$r['letter_template_subject']]);
+        $twig = new Twig_Environment($loader);
+
+        // отправляем письмо
+        return $this->send($to, $twig->render('body', $vars), $twig->render('subject', $vars), $r['letter_template_id'], $save_backup);
     }
 	
 }

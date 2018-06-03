@@ -7,6 +7,6 @@ if(defined('WB_PATH'))
 require_once(WB_PATH.'/framework/functions.php');
     // delete tables from sql dump file
     if (is_readable(__DIR__.'/uninstall-struct.sql')) {
-        $database->SqlImport(__DIR__.'/install-struct.sql', TABLE_PREFIX, __FILE__ );
+        $database->SqlImport(__DIR__.'/uninstall-struct.sql', TABLE_PREFIX, __FILE__ );
     }
 }

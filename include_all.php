@@ -20,7 +20,7 @@ if (!defined('WB_URL')) require(__DIR__.'/../../config.php'); // для иниц
 
 if (!defined('FUNCTIONS_FILE_LOADED')) include(__DIR__.'/../../framework/functions.php');
 
-$sTmp = dirname(dirname(__FILE__)).'/../include/Sensio/Twig/lib/Twig/Autoloader.php';
+$sTmp = dirname(__FILE__).'/include/Sensio/Twig/lib/Twig/Autoloader.php';
 if (!class_exists('Twig_Autoloader') && is_readable($sTmp)){
     include $sTmp;
     Twig_Autoloader::register();

@@ -83,7 +83,7 @@ if ($action=='get_agreement') {
     }
 
     print_success('', ['data'=>$answer]);
-s    
+    
 } else {print_error('неверный api name');}
 
 ?>

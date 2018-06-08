@@ -23,3 +23,4 @@ $module_platform = '2.8.3';
 $module_author = 'Polyakov Konstantin';
 $module_license = 'GNU General Public License';
 $module_description = 'Core of custom namespace. Other modules "wbs_*" can need this module.';
+

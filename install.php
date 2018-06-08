@@ -16,4 +16,3 @@ if(defined('WB_PATH'))
     }
 }
 
-?>

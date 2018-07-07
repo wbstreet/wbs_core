@@ -155,7 +155,7 @@ class WbsStorageImg {
         // проверяем изображение на соответсвие правилам
         
         if (!in_array($ext, $aLimits['exts'])) return "Изображение имеет неразрешённый формат: {$ext}";
-        $size = intdiv(filesize($sTmpPath), 1024);
+        $size = (int)(filesize($sTmpPath) / 1024);
         if ($size === false || $size > $aLimits['maxsize']) return "Изображение имеет недопустимый размер - $size Kb. Разрешено до {$aLimits['maxsize']} Kb!";
         if ($size === false || $size < $aLimits['minsize']) return "Изображение имеет недопустимый размер!";
         

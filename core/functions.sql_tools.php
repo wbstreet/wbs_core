@@ -106,7 +106,7 @@ function glue_values($values) {
 function glue_fields($fields, $sep, $sep2='=') {
     $_fields = array();
     foreach ($fields as $key => $value) {
-        if (gettype($value) == 'array') $value = "(".glue_value($value).")";
+        if (gettype($value) == 'array') $value = "(".glue_values($value).")";
         else $value = process_value($value);
         $key = process_key($key);
         $_fields[] = $key.' '.$sep2.' '.$value;

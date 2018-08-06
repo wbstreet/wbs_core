@@ -99,9 +99,11 @@ class WbsYML {
     }
 }
 
-$clsYml = new WbsYML('test.xml', 'market');
-$clsYml->startShop("Магазин Косметик", "ООО Петросян", "syeys.ru", [['id'=>'RUB', 'rate'=>'CB']], [['id'=>'1', 'name'=>'Цветы'], ['id'=>'1', 'name'=>'Деревья']]);
-$clsYml->startOfferMarket('4', 'true', 'Хороший товар', 'https://syeysk.ru/good/1', 'https://syeysk.ru/pic/1/1', '101', 'RUB', '56');
-$clsYml->endOffer();
-$clsYml->endShop();
-$clsYml->write();
+if (isset($_GET['main_yml'])) {
+    $clsYml = new WbsYML('test.xml', 'market');
+    $clsYml->startShop("Магазин Косметик", "ООО Петросян", "syeys.ru", [['id'=>'RUB', 'rate'=>'CB']], [['id'=>'1', 'name'=>'Цветы'], ['id'=>'1', 'name'=>'Деревья']]);
+    $clsYml->startOfferMarket('4', 'true', 'Хороший товар', 'https://syeysk.ru/good/1', 'https://syeysk.ru/pic/1/1', '101', 'RUB', '56');
+    $clsYml->endOffer();
+    $clsYml->endShop();
+    $clsYml->write();
+}

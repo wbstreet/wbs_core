@@ -35,6 +35,7 @@ class WbsYML {
         return str_replace(['&','"', '>', '<', "'"], ['&amp;', '&quot;', '&gt;', '&lt;', '&apos;'], $orig_str);
     }
 
+    // Розничная торговля, другой бизнес: фид Яндекс.Маркета
     function startOfferMarket($id, $available, $name, $url, $picture, $price, $currencyId, $categoryId, $additional=null) {
         $this->xw->addElement("offer", null, ['id'=>$id, 'available'=>$available], false);
         
@@ -46,6 +47,10 @@ class WbsYML {
         $this->xw->addElement("categoryId", $categoryId);
         
         if ($additional) foreach($additional as $n => $v) $this->xw->addElement($n, $v);
+    }
+
+    // Недвижимость: фид Яндекс.Недвижимости
+    function startOfferAppartment() {
     }
 
     function endOffer() {

@@ -37,12 +37,14 @@ if (!class_exists('WbsEmail')) include(WB_PATH.'/modules/wbs_core/core/class.ema
 if (!class_exists('WbsStorageImg')) include(WB_PATH.'/modules/wbs_core/core/class.storage_img.php');
 if (!class_exists('WbsStorageVisitor')) include(WB_PATH.'/modules/wbs_core/core/class.storage_visitor.php');
 if (!class_exists('WbsStorageSettlement')) include(WB_PATH.'/modules/wbs_core/core/class.storage_settlement.php');
+if (!class_exists('WbsYML')) include(WB_PATH.'/modules/wbs_core/core/class.yml.php');
 
 $clsAgreemnt = new Agreement($database);
 $clsFilter = new FilterData();
 $clsStorageImg = new WbsStorageImg();
 $clsStorageVisitor = new WbsStorageVisitor();
 $clsStorageSettlement = new WbsStorageSettlement();
+$clsYml = new WbsYml();
 
 if (!class_exists('wb')) include(WB_PATH.'/framework/class.wb.php');
 if (!isset($wb) || !($wb instanceof wb)) { $wb = new wb(); }

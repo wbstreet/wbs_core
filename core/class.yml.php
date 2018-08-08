@@ -34,19 +34,23 @@ class WbsYML {
     function replace_special_symbols($orig_str) {
         return str_replace(['&','"', '>', '<', "'"], ['&amp;', '&quot;', '&gt;', '&lt;', '&apos;'], $orig_str);
     }
+    
+    function esc_addElement($name, $text=null, $attributes=null, $end=true) {
+          $this->xw->addElement($name, $text !== null ? $this->replace_special_symbols($text) : $text);
+    }
 
     // Розничная торговля, другой бизнес: фид Яндекс.Маркета
     function startOfferMarket($id, $available, $name, $url, $picture, $price, $currencyId, $categoryId, $additional=null) {
         $this->xw->addElement("offer", null, ['id'=>$id, 'available'=>$available], false);
         
-        $this->xw->addElement("name", $name);
-        $this->xw->addElement("picture", $picture);
-        $this->xw->addElement("url", $url);
-        $this->xw->addElement("price", $price);
-        $this->xw->addElement("currencyId", $currencyId);
-        $this->xw->addElement("categoryId", $categoryId);
+        $this->esc_addElement("name", $name);
+        $this->esc_addElement("picture", $picture);
+        $this->esc_addElement("url", $url);
+        $this->esc_addElement("price", $price);
+        $this->esc_addElement("currencyId", $currencyId);
+        $this->esc_addElement("categoryId", $categoryId);
         
-        if ($additional) foreach($additional as $n => $v) $this->xw->addElement($n, $v);
+        if ($additional) foreach($additional as $n => $v) $this->esc_addElement($n, $v);
     }
 
     // Недвижимость: фид Яндекс.Недвижимости
@@ -66,10 +70,10 @@ class WbsYML {
     function startShop($name, $company, $url, $currencies, $categories, $additional=null) {
         $this->xw->addElement("shop", null, null, false);
 
-        $this->xw->addElement("name", $name);
-        $this->xw->addElement("company", $company);
-        $this->xw->addElement("url", $url);
-        if ($additional) foreach($additional as $n => $v) $this->xw->addElement($n, $v);
+        $this->esc_addElement("name", $name);
+        $this->esc_addElement("company", $company);
+        $this->esc_addElement("url", $url);
+        if ($additional) foreach($additional as $n => $v) $this->esc_addElement($n, $v);
 
         $this->xw->addElement("currencies", null, null, false);
         foreach($currencies as $i => $v) $this->xw->addElement("currency", null, $v);
@@ -79,7 +83,7 @@ class WbsYML {
         foreach($categories as $i => $v) {
             $cat_name = $v['name'];
             unset($v['name']);
-            $this->xw->addElement("category", $cat_name, $v);
+            $this->esc_addElement("category", $cat_name, $v);
         }
         $this->xw->endElement();
         

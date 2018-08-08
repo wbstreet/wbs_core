@@ -1,0 +1,15 @@
+[submodule "include/parsedown-master"]
+	path = include/parsedown-master
+	url = git://github.com/erusev/parsedown.git
+[submodule "include/php-ico-master"]
+	path = include/php-ico-master
+	url = git://github.com/chrisbliss18/php-ico.git
+[submodule "include_client/slick"]
+	path = include_client/slick
+	url = git://github.com/kenwheeler/slick.git
+[submodule "include_client/jquery.localScroll"]
+	path = include_client/jquery.localScroll
+	url = git://github.com/flesler/jquery.localScroll.git
+[submodule "include_client/jquery.scrollTo"]
+	path = include_client/jquery.scrollTo
+	url = git://github.com/flesler/jquery.scrollTo.git

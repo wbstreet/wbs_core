@@ -1,4 +1,7 @@
 <?php
+/*
+Author: Polyakov Konstantin
+*/
 
 class MyXMLWriter extends XMLWriter {
 
@@ -36,7 +39,7 @@ class WbsYML {
     }
     
     function esc_addElement($name, $text=null, $attributes=null, $end=true) {
-          $this->xw->addElement($name, $text !== null ? $this->replace_special_symbols($text) : $text);
+          $this->xw->addElement($name, $text !== null ? $this->replace_special_symbols($text) : $text, $attributes, $end);
     }
 
     // Розничная торговля, другой бизнес: фид Яндекс.Маркета
@@ -50,7 +53,17 @@ class WbsYML {
         $this->esc_addElement("currencyId", $currencyId);
         $this->esc_addElement("categoryId", $categoryId);
         
-        if ($additional) foreach($additional as $n => $v) $this->esc_addElement($n, $v);
+        if ($additional) foreach($additional as $n => $v) {
+            if ($n === 'description') {
+                $this->esc_addElement($n, null, null, false);
+                $this->xw->startCdata($n);
+                $this->xw->text($v);
+                $this->xw->endCdata();
+                $this->xw->endElement();
+            } else {
+                $this->esc_addElement($n, $v);
+            }
+        }
     }
 
     // Недвижимость: фид Яндекс.Недвижимости

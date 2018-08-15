@@ -31,7 +31,7 @@ class WbsYML {
         $this->xw->openMemory();
         
         $this->xw->startDocument("1.0", "UTF-8");
-        $this->xw->addElement("yml_catalog", "example", ["date"=>"ttt"], false);
+        $this->xw->addElement("yml_catalog", null, ["date"=>"ttt"], false);
     }
 
     function replace_special_symbols($orig_str) {

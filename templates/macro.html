@@ -14,3 +14,7 @@
         {% endfor %}
     </div>
 {% endmacro %}
+
+{% macro password_toggle(field) %}
+    <img style="cursor:pointer;" src="/modules/wbs_core/images/password_show.png" class="img_password_toggle" onclick="toggle_password(this, {{ field }})">
+{% endmacro %}

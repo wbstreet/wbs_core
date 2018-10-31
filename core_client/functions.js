@@ -802,3 +802,13 @@ function copyToClipboard(text) {
     document.execCommand("copy");
     $temp.remove();
 }
+
+function toggle_password(img, field) {
+    if (field.type === "password") {
+        field.type = "text";
+        img.src = WB_URL+"/modules/wbs_core/images/password_hide.png";
+    } else if (field.type === "text") {
+        field.type = "password";
+        img.src = WB_URL+"/modules/wbs_core/images/password_show.png";
+    }
+}

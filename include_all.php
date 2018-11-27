@@ -44,7 +44,6 @@ $clsFilter = new FilterData();
 $clsStorageImg = new WbsStorageImg();
 $clsStorageVisitor = new WbsStorageVisitor();
 $clsStorageSettlement = new WbsStorageSettlement();
-$clsYml = new WbsYml();
 
 if (!class_exists('wb')) include(WB_PATH.'/framework/class.wb.php');
 if (!isset($wb) || !($wb instanceof wb)) { $wb = new wb(); }

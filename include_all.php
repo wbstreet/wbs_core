@@ -38,6 +38,7 @@ if (!class_exists('WbsStorageImg')) include(WB_PATH.'/modules/wbs_core/core/clas
 if (!class_exists('WbsStorageVisitor')) include(WB_PATH.'/modules/wbs_core/core/class.storage_visitor.php');
 if (!class_exists('WbsStorageSettlement')) include(WB_PATH.'/modules/wbs_core/core/class.storage_settlement.php');
 if (!class_exists('WbsYML')) include(WB_PATH.'/modules/wbs_core/core/class.yml.php');
+if (!class_exists('WbsTwig')) include(WB_PATH.'/modules/wbs_core/core/class.twig.php');
 
 $clsAgreemnt = new Agreement($database);
 $clsFilter = new FilterData();

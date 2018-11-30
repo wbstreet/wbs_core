@@ -14,12 +14,20 @@ class Addon {
         $this->pathTemplates = WB_PATH."/modules/{$this->name}/templates/";
         $this->urlAPI = WB_URL."/modules/{$this->name}/api.php";
         if (! is_dir($this->pathMedia)) {mkdir($this->pathMedia, 0777, true);}
+        
+        $this->twig = new WbsTwig($this->pathTemplates, [
+            'url_api'=>"url:'{$this->urlAPI}'",
+            'wb_url'=>WB_URL,
+            'section_id'=>$this->section_id,
 
-        $loader = new Twig_Loader_Filesystem([$this->pathTemplates, WB_PATH.'/modules/wbs_core/templates/']);
+            'page_id'=>$this->page_id,
+        ]);
 
-        $this->loader_chain = new Twig_Loader_Chain([$loader]);
+        #$loader = new Twig_Loader_Filesystem([$this->pathTemplates, WB_PATH.'/modules/wbs_core/templates/']);
 
-        $this->_twig = new Twig_Environment($this->loader_chain);
+        #$this->loader_chain = new Twig_Loader_Chain([$loader]);
+
+        #$this->_twig = new Twig_Environment($this->loader_chain);
     }
     
     function getUrlAction($action) {
@@ -58,24 +66,27 @@ class Addon {
     /* Functions for Twig */
     
     function render($file_name, $fields, $is_ret=false) {
-        $fields = array_merge($fields, [
+        return $this->twig->render($file_name, $fields, $is_ret);
+        /*$fields = array_merge($fields, [
             'url_api'=>"url:'{$this->urlAPI}'",
             'wb_url'=>WB_URL,
-            'section_id'=>$this->section_id,
+            'section_id'=>$this->section_id,
+
             'page_id'=>$this->page_id,
         ]);
 
         $res = $this->_twig->render($file_name, $fields);
 
         if ($is_ret) return $res;
-        echo $res;
+        echo $res;*/
     }
     
     function add_loader($type, $data) {
-        $loader = null;
-        if ($type=="filesystem") $loader = new Twig_Loader_Filesystem($data);
-        else if ($type=="array") $loader = new Twig_Loader_Array($data);
-        $this->loader_chain->addLoader($loader);
+        $this->twig->add_loader($type, $data);
+        //$loader = null;
+        //if ($type=="filesystem") $loader = new Twig_Loader_Filesystem($data);
+        //else if ($type=="array") $loader = new Twig_Loader_Array($data);
+        //$this->loader_chain->addLoader($loader);
 
     }
 

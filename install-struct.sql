@@ -134,3 +134,16 @@ CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_visitor_refer` (
 --
 -- class.storage_contact.php
 --
+
+--
+-- module wbs_admin
+--
+
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_any_variables`;
+CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_any_variables` (
+  `variable_id` int(11) NOT NULL AUTO_INCREMENT,
+  `variable_code_name` varchar(255) NOT NULL,
+  `variable_name` varchar(255) NOT NULL,
+  `variable_value` varchar(255) NOT NULL,
+  PRIMARY KEY (`variable_id`)
+){TABLE_ENGINE=MyISAM};

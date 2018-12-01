@@ -142,6 +142,7 @@ CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_visitor_refer` (
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_any_variables`;
 CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_any_variables` (
   `variable_id` int(11) NOT NULL AUTO_INCREMENT,
+  `variable_lang` varchar(3) NOT NULL,
   `variable_code_name` varchar(255) NOT NULL,
   `variable_name` varchar(255) NOT NULL,
   `variable_value` varchar(255) NOT NULL,

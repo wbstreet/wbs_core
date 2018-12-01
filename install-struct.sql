@@ -145,5 +145,6 @@ CREATE TABLE `{TABLE_PREFIX}mod_wbs_core_any_variables` (
   `variable_code_name` varchar(255) NOT NULL,
   `variable_name` varchar(255) NOT NULL,
   `variable_value` varchar(255) NOT NULL,
+  `is_deleted` int(11) NOT NULL,
   PRIMARY KEY (`variable_id`)
 ){TABLE_ENGINE=MyISAM};

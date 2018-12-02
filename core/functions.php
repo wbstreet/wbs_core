@@ -331,4 +331,20 @@ function createAccessFile($obj_id, $new_name, $old_name, $page_id, $section_id, 
     return [false, $obj_link];
 }
 
+/* wbs_admin */
+
+function get_global_vars($lang, &$any_vars) {
+    $r = select_row(TABLE_PREFIX."mod_wbs_core_any_variables", "*", "`variable_lang`=".process_value(strtolower($lang)));
+    if (gettype($r) === "string") print_error($r);
+
+    while($r !== null && $variable = $r->fetchRow(MYSQLI_ASSOC)) {
+        $any_vars[$variable["variable_code_name"]] = [
+            'lang'=>$variable['variable_lang'],
+            'id'=>$variable['variable_id'],
+            'code_name'=>$variable['variable_code_name'],
+            'name'=>$variable['variable_name'],
+            'value'=>$variable['variable_value'],
+        ];
+    }
+}
 ?>

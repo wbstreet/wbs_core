@@ -10,3 +10,4 @@ DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_settlement_type`;
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_visitor`;
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_visitor_browser`;
 DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_visitor_refer`;
+DROP TABLE IF EXISTS `{TABLE_PREFIX}mod_wbs_core_any_variables`;

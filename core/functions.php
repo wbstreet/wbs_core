@@ -342,8 +342,8 @@ function get_global_vars($lang, &$any_vars) {
             'lang'=>$variable['variable_lang'],
             'id'=>$variable['variable_id'],
             'code_name'=>$variable['variable_code_name'],
-            'name'=>$variable['variable_name'],
-            'value'=>$variable['variable_value'],
+            'name'=> $variable['variable_is_active'] === '1' ? $variable['variable_name'] : "",
+            'value'=> $variable['variable_is_active'] === '1' ? $variable['variable_value'] : "",
         ];
     }
 }

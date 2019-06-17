@@ -5,15 +5,15 @@
 * @licenece: GNU General Public Licence
 * @date: 2016-2017
 * 
-* 2017-02-07 - Добавлены функции glue_fields, check_insert, check_delete. Функции prepare2update, prepare2select не рекомендованы 
-* 2017-04-11 - Функция prepare2insert нерекомендована
-* 2017-04-12 - добавлена константа загрузки модуля.
+* 2017-02-07 - Г„Г®ГЎГ ГўГ«ГҐГ­Г» ГґГіГ­ГЄГ¶ГЁГЁ glue_fields, check_insert, check_delete. Г”ГіГ­ГЄГ¶ГЁГЁ prepare2update, prepare2select Г­ГҐ Г°ГҐГЄГ®Г¬ГҐГ­Г¤Г®ГўГ Г­Г» 
+* 2017-04-11 - Г”ГіГ­ГЄГ¶ГЁГї prepare2insert Г­ГҐГ°ГҐГЄГ®Г¬ГҐГ­Г¤Г®ГўГ Г­Г 
+* 2017-04-12 - Г¤Г®ГЎГ ГўГ«ГҐГ­Г  ГЄГ®Г­Г±ГІГ Г­ГІГ  Г§Г ГЈГ°ГіГ§ГЄГЁ Г¬Г®Г¤ГіГ«Гї.
 */
 
-// функции, которые должны лечь в основу класса, унаследованного от database
+// ГґГіГ­ГЄГ¶ГЁГЁ, ГЄГ®ГІГ®Г°Г»ГҐ Г¤Г®Г«Г¦Г­Г» Г«ГҐГ·Гј Гў Г®Г±Г­Г®ГўГі ГЄГ«Г Г±Г±Г , ГіГ­Г Г±Г«ГҐГ¤Г®ГўГ Г­Г­Г®ГЈГ® Г®ГІ database
 
 /**
-* Объект "значение":
+* ГЋГЎГєГҐГЄГІ "Г§Г­Г Г·ГҐГ­ГЁГҐ":
 *     [
 *         'type'=> 'string'
 *         'value'=> $strValue || null || $intValue
@@ -22,7 +22,7 @@
 *         'value'=> $strSQLFunctionName
 *     ]
 * 
-* Объект "Имя таблицы":
+* ГЋГЎГєГҐГЄГІ "Г€Г¬Гї ГІГ ГЎГ«ГЁГ¶Г»":
 *     [
 *         'name' => $strName
 *         'alias' => $strAliasName
@@ -77,8 +77,8 @@ function process_where($where) {
 
 /** 
 * 
-* Склеивает имена через запятую. Ключами могут быть как строки, так и числа.
-* Строки заключаются в одинарные наклонные кавычки
+* Г‘ГЄГ«ГҐГЁГўГ ГҐГІ ГЁГ¬ГҐГ­Г  Г·ГҐГ°ГҐГ§ Г§Г ГЇГїГІГіГѕ. ГЉГ«ГѕГ·Г Г¬ГЁ Г¬Г®ГЈГіГІ ГЎГ»ГІГј ГЄГ ГЄ Г±ГІГ°Г®ГЄГЁ, ГІГ ГЄ ГЁ Г·ГЁГ±Г«Г .
+* Г‘ГІГ°Г®ГЄГЁ Г§Г ГЄГ«ГѕГ·Г ГѕГІГ±Гї Гў Г®Г¤ГЁГ­Г Г°Г­Г»ГҐ Г­Г ГЄГ«Г®Г­Г­Г»ГҐ ГЄГ ГўГ»Г·ГЄГЁ
 * 
 * @param arra $keys ['key1', 'key2', 'key3']
 */
@@ -128,16 +128,16 @@ function glue_condition($condition) {
         return $key." ".$operator." ".$value;
 }
 
-// не рекомендавана. Используйте glue_keys(array_keys($fields)) и glue_values(array_values($fields))
+// Г­ГҐ Г°ГҐГЄГ®Г¬ГҐГ­Г¤Г ГўГ Г­Г . Г€Г±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ glue_keys(array_keys($fields)) ГЁ glue_values(array_values($fields))
 //function prepare2insert($fields) {
 
-// не рекомендавана. Используйте glue_fields($fields, ',')
+// Г­ГҐ Г°ГҐГЄГ®Г¬ГҐГ­Г¤Г ГўГ Г­Г . Г€Г±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ glue_fields($fields, ',')
 //function prepare2update($fields) {
 
-// не рекомендавана. Используйте glue_fields($fields, ' AND ')
+// Г­ГҐ Г°ГҐГЄГ®Г¬ГҐГ­Г¤Г ГўГ Г­Г . Г€Г±ГЇГ®Г«ГјГ§ГіГ©ГІГҐ glue_fields($fields, ' AND ')
 //function prepare2select($fields) {
 
-/* ----------- Промежуточный уровень: построение запроса ----------- */ 
+/* ----------- ГЏГ°Г®Г¬ГҐГ¦ГіГІГ®Г·Г­Г»Г© ГіГ°Г®ГўГҐГ­Гј: ГЇГ®Г±ГІГ°Г®ГҐГ­ГЁГҐ Г§Г ГЇГ°Г®Г±Г  ----------- */ 
 
 function build_order($keys=null, $direction=null) {
         if ($keys === null) return '';
@@ -215,7 +215,7 @@ function build_insert($table, $fields, $value_lines=false) {
         return "INSERT INTO $table ($keys) VALUES $value_lines";    
 }
 
-/* ----------- Промежуточный уровень: проверяем результат ----------- */
+/* ----------- ГЏГ°Г®Г¬ГҐГ¦ГіГІГ®Г·Г­Г»Г© ГіГ°Г®ГўГҐГ­Гј: ГЇГ°Г®ГўГҐГ°ГїГҐГ¬ Г°ГҐГ§ГіГ«ГјГІГ ГІ ----------- */
 
 function db_get_err($sql, $type) {
     global $database;
@@ -265,7 +265,7 @@ function check_select($sql) {
         return $r;
 }
 
-/* ----------- Высший уровень: строим, делаем запрос, проверяем результат ----------- */ 
+/* ----------- Г‚Г»Г±ГёГЁГ© ГіГ°Г®ГўГҐГ­Гј: Г±ГІГ°Г®ГЁГ¬, Г¤ГҐГ«Г ГҐГ¬ Г§Г ГЇГ°Г®Г±, ГЇГ°Г®ГўГҐГ°ГїГҐГ¬ Г°ГҐГ§ГіГ«ГјГІГ ГІ ----------- */ 
 
 function update_row($table, $fields, $where=null) {
     global $database;
@@ -293,7 +293,7 @@ function insert_rows($table, $fields, $value_lines=false) {
 }
 function insert_row($table, $fields, $value_lines=false) { return insert_rows($table, $fields, $value_lines); }
 
-/* ----------- Комбинация запросов ----------- */
+/* ----------- ГЉГ®Г¬ГЎГЁГ­Г Г¶ГЁГї Г§Г ГЇГ°Г®Г±Г®Гў ----------- */
 
 function insert_row_uniq($table, $fields, $keys_uniq=false, $key_ret=false) {
     global $database;
@@ -322,17 +322,17 @@ function insert_row_uniq($table, $fields, $keys_uniq=false, $key_ret=false) {
 
 /**
 * 
-* mixed $table - таблица или список таблиц
-* array $fields - поля и значения для вставки. Включая те, для которых в базе указаны значения по умолчанию. Кроме двух нижеуказанных полей
-* mixed $keys_uniq - поля, которые должныв быть уникальными. Если false, то будут использованы ключи $fields 
-* string $key_ret - поле с автоинкрементом
+* mixed $table - ГІГ ГЎГ«ГЁГ¶Г  ГЁГ«ГЁ Г±ГЇГЁГ±Г®ГЄ ГІГ ГЎГ«ГЁГ¶
+* array $fields - ГЇГ®Г«Гї ГЁ Г§Г­Г Г·ГҐГ­ГЁГї Г¤Г«Гї ГўГ±ГІГ ГўГЄГЁ. Г‚ГЄГ«ГѕГ·Г Гї ГІГҐ, Г¤Г«Гї ГЄГ®ГІГ®Г°Г»Гµ Гў ГЎГ Г§ГҐ ГіГЄГ Г§Г Г­Г» Г§Г­Г Г·ГҐГ­ГЁГї ГЇГ® ГіГ¬Г®Г«Г·Г Г­ГЁГѕ. ГЉГ°Г®Г¬ГҐ Г¤ГўГіГµ Г­ГЁГ¦ГҐГіГЄГ Г§Г Г­Г­Г»Гµ ГЇГ®Г«ГҐГ©
+* mixed $keys_uniq - ГЇГ®Г«Гї, ГЄГ®ГІГ®Г°Г»ГҐ Г¤Г®Г«Г¦Г­Г»Гў ГЎГ»ГІГј ГіГ­ГЁГЄГ Г«ГјГ­Г»Г¬ГЁ. Г…Г±Г«ГЁ false, ГІГ® ГЎГіГ¤ГіГІ ГЁГ±ГЇГ®Г«ГјГ§Г®ГўГ Г­Г» ГЄГ«ГѕГ·ГЁ $fields 
+* string $key_ret - ГЇГ®Г«ГҐ Г± Г ГўГІГ®ГЁГ­ГЄГ°ГҐГ¬ГҐГ­ГІГ®Г¬
 * 
-* У таблицы обязательно должны быть поле с автоинкрементом ($key_ret) и поле `is_deleted`
+* Г“ ГІГ ГЎГ«ГЁГ¶Г» Г®ГЎГїГ§Г ГІГҐГ«ГјГ­Г® Г¤Г®Г«Г¦Г­Г» ГЎГ»ГІГј ГЇГ®Г«ГҐ Г± Г ГўГІГ®ГЁГ­ГЄГ°ГҐГ¬ГҐГ­ГІГ®Г¬ ($key_ret) ГЁ ГЇГ®Г«ГҐ `is_deleted`
 **/
 function insert_row_uniq_deletable($table, $fields, $keys_uniq, $key_ret) {
     global $database;
 
-    // проверяем наличие дубля
+    // ГЇГ°Г®ГўГҐГ°ГїГҐГ¬ Г­Г Г«ГЁГ·ГЁГҐ Г¤ГіГЎГ«Гї
 
     if ($keys_uniq !== null) {
         if ($keys_uniq === false) $keys_uniq = array_keys($fields);
@@ -343,21 +343,21 @@ function insert_row_uniq_deletable($table, $fields, $keys_uniq, $key_ret) {
 
         $r = select_row($table, process_key($key_ret), glue_fields($where, ' AND ')." LIMIT 1");
         if (gettype($r) === 'string') return $r;
-        else if ($r !== null) return 'Уже существует!';
+        else if ($r !== null) return 'Г“Г¦ГҐ Г±ГіГ№ГҐГ±ГІГўГіГҐГІ!';
     }
 
-    // Если дублей нет, то проверяем наличие удалённых записей
+    // Г…Г±Г«ГЁ Г¤ГіГЎГ«ГҐГ© Г­ГҐГІ, ГІГ® ГЇГ°Г®ГўГҐГ°ГїГҐГ¬ Г­Г Г«ГЁГ·ГЁГҐ ГіГ¤Г Г«ВёГ­Г­Г»Гµ Г§Г ГЇГЁГ±ГҐГ©
 
     $r = select_row($table, process_key($key_ret), "`is_deleted`=1 LIMIT 1");
     if (gettype($r) === 'string') return $r;
 
-    if ($r === null) { // если нет удалённых записей, то вставляем новую
+    if ($r === null) { // ГҐГ±Г«ГЁ Г­ГҐГІ ГіГ¤Г Г«ВёГ­Г­Г»Гµ Г§Г ГЇГЁГ±ГҐГ©, ГІГ® ГўГ±ГІГ ГўГ«ГїГҐГ¬ Г­Г®ГўГіГѕ
         
         $r = insert_row($table, $fields);
         if (gettype($r) === 'string') return $r;
         $id = $database->getLastInsertId();
 
-    } else { // если есть удалённые, то обновляем
+    } else { // ГҐГ±Г«ГЁ ГҐГ±ГІГј ГіГ¤Г Г«ВёГ­Г­Г»ГҐ, ГІГ® Г®ГЎГ­Г®ГўГ«ГїГҐГ¬
 
         $id = $r->fetchRow(MYSQLI_ASSOC)[$key_ret];
         $fields['is_deleted'] = '0';
@@ -370,7 +370,7 @@ function insert_row_uniq_deletable($table, $fields, $keys_uniq, $key_ret) {
     return (integer)$id;
 }
 
-/* функции для конструирования функций-извлектаелей данных */
+/* ГґГіГ­ГЄГ¶ГЁГЁ Г¤Г«Гї ГЄГ®Г­Г±ГІГ°ГіГЁГ°Г®ГўГ Г­ГЁГї ГґГіГ­ГЄГ¶ГЁГ©-ГЁГ§ГўГ«ГҐГЄГІГ ГҐГ«ГҐГ© Г¤Г Г­Г­Г»Гµ */
 
 function getobj_order_limit($sets, $glue=true) {
     $order = build_order(
@@ -436,7 +436,7 @@ function get_obj($tables, $where, $where_opts, $where_find=[], $sets=[], $only_c
 
         $select = $only_count ? "COUNT(*) AS count" : "*";
         $tables = implode(',', $tables);
-        $where = implode(' AND ', $where);
+        $where = $where ? implode(' AND ', $where) : "1=1";
         $order_limit = getobj_order_limit($sets);
         
         $sql = "SELECT $select FROM $tables WHERE $where $order_limit";

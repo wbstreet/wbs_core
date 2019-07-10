@@ -389,7 +389,7 @@ function getobj_return($sql, $only_count) {
     global $database;
 
     $r = $database->query($sql);
-    if ($database->is_error()) return $database->get_error();
+    if ($database->is_error()) return db_get_err($sql, 'getobj');
 
     if ($only_count) {
         $count = $r->fetchRow(MYSQLI_ASSOC)['count'];
